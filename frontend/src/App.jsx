@@ -20,7 +20,7 @@ function App() {
   // Backend aggregated grid points
   const [heatPoints, setHeatPoints] = useState([]); // [{latitude, longitude, average_stress, count}]
 
-  const [center, setCenter] = useState({ lat: 13.0827, lng: 80.2707 });
+  const [center, setCenter] = useState(null);
 
   const addPoint = (p) => setPoints((prev) => [p, ...prev]);
 
@@ -32,6 +32,32 @@ function App() {
   useEffect(() => {
     refreshHeatmap().catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      console.warn("Geolocation not supported");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setCenter({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+      },
+      (err) => {
+        console.warn("Location denied or unavailable:", err);
+        // fallback (optional)
+        setCenter({ lat: 13.0827, lng: 80.2707 });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+      }
+    );
+  }, []);
+
 
   const handleNoiseDetected = (payload) => {
     navigator.geolocation.getCurrentPosition(
@@ -85,7 +111,15 @@ function App() {
           flexDirection: "column",
         }}
       >
-        <Map lat={center.lat} lng={center.lng} points={points} heatPoints={heatPoints} />
+        {center && (
+          <Map
+            lat={center.lat}
+            lng={center.lng}
+            points={points}
+            heatPoints={heatPoints}
+          />
+        )}
+
 
         <button
           style={{

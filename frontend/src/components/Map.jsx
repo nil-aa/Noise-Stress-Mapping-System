@@ -17,7 +17,7 @@ L.Icon.Default.mergeOptions({
 /**
  * points: [{ lat, lng, rms, peak, createdAt }]
  */
-const Map = ({ lat = 13.0827, lng = 80.2707, zoom = 13, points = [], heatPoints = [] }) => {
+const Map = ({ lat = 13.0827, lng = 80.2707, zoom = 16, points = [], heatPoints = [] }) => {
   const center = [lat, lng];
 
   return (
@@ -29,11 +29,11 @@ const Map = ({ lat = 13.0827, lng = 80.2707, zoom = 13, points = [], heatPoints 
         />
 
         {/* Center marker (optional: your default location) */}
-        <Marker position={center}>
+        {/* <Marker position={center}>
           <Popup>
             Center: {lat}, {lng}
           </Popup>
-        </Marker>
+        </Marker> */}
 
         {/* Noise points */}
         {points.map((p, idx) => (
@@ -49,7 +49,7 @@ const Map = ({ lat = 13.0827, lng = 80.2707, zoom = 13, points = [], heatPoints 
           </Marker>
         ))}
         {/* Backend grid points (from noise.db via /heatmap-data) */}
-        {heatPoints.map((p, idx) => (
+        {/* {heatPoints.map((p, idx) => (
         <Marker
             key={`heat-${p.latitude}-${p.longitude}-${idx}`}
             position={[p.latitude, p.longitude]}
@@ -63,7 +63,7 @@ const Map = ({ lat = 13.0827, lng = 80.2707, zoom = 13, points = [], heatPoints 
             </div>
             </Popup>
         </Marker>
-        ))}
+        ))} */}
       </MapContainer>
     </div>
   );
