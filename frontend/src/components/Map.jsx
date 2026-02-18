@@ -14,27 +14,40 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-const Map = ({ lat = 13.0827, lng = 80.2707, zoom = 13 }) => {
-  const position = [lat, lng];
+/**
+ * points: [{ lat, lng, rms, peak, createdAt }]
+ */
+const Map = ({ lat = 13.0827, lng = 80.2707, zoom = 13, points = [] }) => {
+  const center = [lat, lng];
 
   return (
     <div style={{ height: "70vh", width: "100%", borderRadius: "12px", overflow: "hidden" }}>
-      <MapContainer
-        center={position}
-        zoom={zoom}
-        scrollWheelZoom={true}
-        style={{ height: "100%", width: "100%" }}
-      >
+      <MapContainer center={center} zoom={zoom} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <Marker position={position}>
+        {/* Center marker (optional: your default location) */}
+        <Marker position={center}>
           <Popup>
-            Location: {lat}, {lng}
+            Center: {lat}, {lng}
           </Popup>
         </Marker>
+
+        {/* Noise points */}
+        {points.map((p, idx) => (
+          <Marker key={`${p.createdAt || idx}-${idx}`} position={[p.lat, p.lng]}>
+            <Popup>
+              <div>
+                <div><b>Noise detected</b></div>
+                <div>Lat/Lng: {p.lat.toFixed(6)}, {p.lng.toFixed(6)}</div>
+                {typeof p.rms === "number" && <div>RMS: {p.rms.toFixed(4)}</div>}
+                {typeof p.peak === "number" && <div>Peak: {p.peak.toFixed(4)}</div>}
+              </div>
+            </Popup>
+          </Marker>
+        ))}
       </MapContainer>
     </div>
   );
