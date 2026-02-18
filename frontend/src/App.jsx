@@ -1,25 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Map from "./components/Map";
 import NoiseCheckInModal from "./components/NoiseCheckInModal";
+import { getHeatmapData, submitReading } from "./api/noiseApi";
+
+function rmsToStressScore(rms) {
+  const MIN = 0.02;
+  const MAX = 0.12;
+  const x = (rms - MIN) / (MAX - MIN);
+  return Math.max(0, Math.min(1, x));
+}
 
 function App() {
   const [isCheckInOpen, setIsCheckInOpen] = useState(false);
+
+  // Your existing “exact markers”
   const [points, setPoints] = useState([]); // [{lat, lng, rms, peak, createdAt}]
-  const [center, setCenter] = useState({ lat: 13.0827, lng: 80.2707 }); // optional
+
+  // Backend aggregated grid points
+  const [heatPoints, setHeatPoints] = useState([]); // [{latitude, longitude, average_stress, count}]
+
+  const [center, setCenter] = useState({ lat: 13.0827, lng: 80.2707 });
 
   const addPoint = (p) => setPoints((prev) => [p, ...prev]);
 
+  const refreshHeatmap = async () => {
+    const data = await getHeatmapData();
+    setHeatPoints(data);
+  };
+
+  useEffect(() => {
+    refreshHeatmap().catch(console.error);
+  }, []);
+
   const handleNoiseDetected = (payload) => {
-    // Ask for location ONLY if noise is detected
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      async (pos) => {
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
 
-        // optionally recenter map
         setCenter({ lat, lng });
 
+        // show marker immediately
         addPoint({
           lat,
           lng,
@@ -28,7 +50,19 @@ function App() {
           createdAt: Date.now(),
         });
 
-        setIsCheckInOpen(false);
+        // persist to DB via backend
+        try {
+          const stress_score = rmsToStressScore(payload.rms);
+          await submitReading({ latitude: lat, longitude: lng, stress_score });
+
+          // refresh aggregated map points from DB
+          await refreshHeatmap();
+
+          setIsCheckInOpen(false);
+        } catch (e) {
+          console.error(e);
+          alert("Saved locally on map, but failed to store in backend DB.");
+        }
       },
       (err) => {
         console.error(err);
@@ -51,7 +85,7 @@ function App() {
           flexDirection: "column",
         }}
       >
-        <Map lat={center.lat} lng={center.lng} points={points} />
+        <Map lat={center.lat} lng={center.lng} points={points} heatPoints={heatPoints} />
 
         <button
           style={{

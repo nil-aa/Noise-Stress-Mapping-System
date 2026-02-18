@@ -82,12 +82,15 @@ export default function NoiseCheckInModal({ onClose, onNoiseDetected }) {
   }, []);
 
   const stopRecording = () => {
-    if (status !== "recording") return;
     cleanupTimers();
-    try {
-      recorderRef.current?.stop();
-    } catch {}
-  };
+
+    const rec = recorderRef.current;
+    if (rec && rec.state === "recording") {
+        try {
+        rec.stop();
+        } catch {}
+    }
+    };
 
   const startRecording = async () => {
     setError(null);
@@ -191,7 +194,7 @@ export default function NoiseCheckInModal({ onClose, onNoiseDetected }) {
             <h3 style={{ margin: 0 }}>Noise Check-In</h3>
             <p style={{ margin: "6px 0", color: "#555" }}>Records 10 seconds and detects noise.</p>
           </div>
-          <button onClick={onClose} style={{ border: "none", background: "transparent", fontSize: 18, cursor: "pointer" }}>
+          <button onClick={onClose} style={{ border: "none", background: "transparent",color:"black", fontSize: 18, cursor: "pointer" }}>
             ✕
           </button>
         </div>
