@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Map from "./components/Map";
@@ -12,6 +13,15 @@ function rmsToStressScore(rms) {
 }
 
 function App() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+    }, []);
+  
   const [isCheckInOpen, setIsCheckInOpen] = useState(false);
 
   // Your existing “exact markers”

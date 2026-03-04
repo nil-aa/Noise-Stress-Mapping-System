@@ -138,7 +138,7 @@ export default function NoiseCheckInModal({ onClose, onNoiseDetected }) {
           const peak = computePeak(pcm);
 
           // Tune this after testing on your laptop
-          const NOISE_RMS_THRESHOLD = 0.03;
+          const NOISE_RMS_THRESHOLD = 0.0003;
           const detected = rms >= NOISE_RMS_THRESHOLD;
 
           const payload = { detected, rms, peak, durationSec, sampleRate };

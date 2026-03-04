@@ -1,10 +1,19 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
 from .database import engine, SessionLocal, Base
-from .models import NoiseReading
-from .schemas import ReadingCreate, ReadingResponse
+from .models import NoiseReading, User
+from .schemas import ReadingCreate, ReadingResponse, UserCreate, Token
 from .utils import convert_to_grid
 from fastapi.middleware.cors import CORSMiddleware
+from .auth import (
+    hash_password,
+    verify_password,
+    create_access_token,
+    create_refresh_token
+)
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from .auth import SECRET_KEY, ALGORITHM
 
 app = FastAPI()
 app.add_middleware(
@@ -15,6 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 Base.metadata.create_all(bind=engine)
 
 def get_db():
@@ -24,9 +34,23 @@ def get_db():
     finally:
         db.close()
 
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = str(payload.get("sub"))
+        token_type: str = str(payload.get("type"))
+
+        if email is None or token_type != "access":
+            raise HTTPException(status_code=401, detail="Invalid token")
+
+        return email
+
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
 
 @app.post("/submit-reading")
-def submit_reading(reading: ReadingCreate):
+def submit_reading(reading: ReadingCreate, current_user: str = Depends(get_current_user)):
     db: Session = SessionLocal()
 
     grid = convert_to_grid(reading.latitude, reading.longitude)
@@ -80,3 +104,71 @@ def get_heatmap_data():
         })
 
     return result
+
+@app.post("/auth/register")
+def signup(user: UserCreate):
+    db: Session = SessionLocal()
+
+    existing = db.query(User).filter(User.email == user.email).first()
+    if existing:
+        db.close()
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    new_user = User(
+        email=user.email,
+        hashed_password=hash_password(user.password)
+    )
+
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    db.close()
+
+    return {"message": "User created successfully"}
+
+
+@app.post("/auth/login", response_model=Token)
+def login(user: UserCreate):
+    db: Session = SessionLocal()
+
+    db_user = db.query(User).filter(User.email == user.email).first()
+
+    if not db_user or not verify_password(user.password, db_user.hashed_password):
+        db.close()
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    access_token = create_access_token(data={"sub": db_user.email})
+    refresh_token = create_refresh_token(data={"sub": db_user.email})
+
+    db.close()
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+
+@app.post("/refresh", response_model=Token)
+def refresh_token(refresh_token: str):
+    try:
+        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        token_type = payload.get("type")
+
+        if token_type != "refresh":
+            raise HTTPException(status_code=401, detail="Invalid refresh token")
+
+        new_access_token = create_access_token(data={"sub": email})
+        new_refresh_token = create_refresh_token(data={"sub": email})
+
+        return {
+            "access_token": new_access_token,
+            "refresh_token": new_refresh_token,
+            "token_type": "bearer"
+        }
+
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
+    
+
