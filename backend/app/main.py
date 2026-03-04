@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
-from .database import engine, SessionLocal, Base
+from .database import SessionLocal, init_db
 from .models import NoiseReading, User
 from .schemas import ReadingCreate, ReadingResponse, UserCreate, Token
 from .utils import convert_to_grid
@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-Base.metadata.create_all(bind=engine)
+init_db()
 
 def get_db():
     db = SessionLocal()
@@ -83,6 +83,8 @@ def submit_reading(
 
     new_reading = NoiseReading(
         grid_location=grid,
+        latitude=reading.latitude,
+        longitude=reading.longitude,
         stress_score=reading.stress_score,
         user_id=current_user.id
     )
@@ -211,7 +213,10 @@ def get_my_readings(current_user: User = Depends(get_current_user)):
     result = []
 
     for r in readings:
-        lat, lng = map(float, r.grid_location.split(","))
+        if r.latitude is not None and r.longitude is not None:
+            lat, lng = float(r.latitude), float(r.longitude)
+        else:
+            lat, lng = map(float, r.grid_location.split(","))
         result.append({
             "id": r.id,
             "latitude": lat,
@@ -238,7 +243,10 @@ def get_nearby_readings(
     result = []
 
     for r in readings:
-        r_lat, r_lng = map(float, r.grid_location.split(","))
+        if r.latitude is not None and r.longitude is not None:
+            r_lat, r_lng = float(r.latitude), float(r.longitude)
+        else:
+            r_lat, r_lng = map(float, r.grid_location.split(","))
 
         distance = haversine(lat, lng, r_lat, r_lng)
 

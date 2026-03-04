@@ -8,6 +8,8 @@ class NoiseReading(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     grid_location = Column(String)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
     stress_score = Column(Float)
     timestamp = Column(DateTime, default=datetime.utcnow)
 
