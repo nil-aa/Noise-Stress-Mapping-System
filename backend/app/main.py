@@ -14,6 +14,7 @@ from .auth import (
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from .auth import SECRET_KEY, ALGORITHM
+import math
 
 app = FastAPI()
 app.add_middleware(
@@ -24,7 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 Base.metadata.create_all(bind=engine)
 
 def get_db():
@@ -34,7 +35,10 @@ def get_db():
     finally:
         db.close()
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = str(payload.get("sub"))
@@ -43,27 +47,49 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         if email is None or token_type != "access":
             raise HTTPException(status_code=401, detail="Invalid token")
 
-        return email
+        user = db.query(User).filter(User.email == email).first()
+
+        if user is None:
+            raise HTTPException(status_code=401, detail="User not found")
+
+        return user
 
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
+    
+def haversine(lat1, lon1, lat2, lon2):
+    R = 6371000  # meters
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    delta_phi = math.radians(lat2 - lat1)
+    delta_lambda = math.radians(lon2 - lon1)
+
+    a = math.sin(delta_phi / 2) ** 2 + \
+        math.cos(phi1) * math.cos(phi2) * \
+        math.sin(delta_lambda / 2) ** 2
+
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return R * c
 
 
 @app.post("/submit-reading")
-def submit_reading(reading: ReadingCreate, current_user: str = Depends(get_current_user)):
-    db: Session = SessionLocal()
+def submit_reading(
+    reading: ReadingCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
 
     grid = convert_to_grid(reading.latitude, reading.longitude)
 
     new_reading = NoiseReading(
         grid_location=grid,
         stress_score=reading.stress_score,
+        user_id=current_user.id
     )
 
     db.add(new_reading)
     db.commit()
     db.refresh(new_reading)
-    db.close()
 
     return {"message": "Reading stored successfully"}
 
@@ -170,5 +196,62 @@ def refresh_token(refresh_token: str):
 
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
+
+
+@app.get("/my-readings")
+def get_my_readings(current_user: User = Depends(get_current_user)):
+    db: Session = SessionLocal()
+
+    readings = (
+        db.query(NoiseReading)
+        .filter(NoiseReading.user_id == current_user.id)
+        .all()
+    )
+
+    result = []
+
+    for r in readings:
+        lat, lng = map(float, r.grid_location.split(","))
+        result.append({
+            "id": r.id,
+            "latitude": lat,
+            "longitude": lng,
+            "stress_score": r.stress_score,
+            "timestamp": r.timestamp,
+            "user_id": r.user_id
+        })
+
+    db.close()
+    return result
+
+@app.get("/nearby-readings")
+def get_nearby_readings(
+    lat: float,
+    lng: float,
+    radius: float = 500,
+    current_user: User = Depends(get_current_user)
+):
+    db: Session = SessionLocal()
+    readings = db.query(NoiseReading).all()
+    db.close()
+
+    result = []
+
+    for r in readings:
+        r_lat, r_lng = map(float, r.grid_location.split(","))
+
+        distance = haversine(lat, lng, r_lat, r_lng)
+
+        if distance <= radius:
+            result.append({
+                "id": r.id,
+                "latitude": r_lat,
+                "longitude": r_lng,
+                "user_id": r.user_id,
+                "stress_score": r.stress_score,
+                "timestamp": r.timestamp
+            })
+
+    return result
     
 

@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, Float, String, DateTime, Boolean
+from sqlalchemy import Column, ForeignKey, Integer, Float, String, DateTime, Boolean
+from sqlalchemy.orm import relationship
 from datetime import datetime
 from .database import Base
 
@@ -9,6 +10,9 @@ class NoiseReading(Base):
     grid_location = Column(String)
     stress_score = Column(Float)
     timestamp = Column(DateTime, default=datetime.utcnow)
+
+    user_id = Column(Integer, ForeignKey("users.id"))
+    user = relationship("User")
 
 
 class User(Base):

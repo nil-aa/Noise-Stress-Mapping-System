@@ -41,3 +41,23 @@ export async function getHeatmapData() {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
+
+export async function getMyReadings() {
+  const res = await fetch(`${BASE_URL}/my-readings`, {
+    headers: getAuthHeaders(),
+  });
+
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+
+export async function getNearbyReadings(lat, lng, radius = 500) {
+  const res = await fetch(
+    `${BASE_URL}/nearby-readings?lat=${lat}&lng=${lng}&radius=${radius}`,
+    { headers: getAuthHeaders() }
+  );
+
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}

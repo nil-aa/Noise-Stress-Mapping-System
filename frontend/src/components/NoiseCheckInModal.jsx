@@ -146,7 +146,6 @@ export default function NoiseCheckInModal({ onClose, onNoiseDetected }) {
           setResult(payload);
           setStatus("done");
 
-          if (detected) onNoiseDetected(payload);
         } catch (e) {
           console.error(e);
           setStatus("error");
@@ -256,6 +255,24 @@ export default function NoiseCheckInModal({ onClose, onNoiseDetected }) {
             If detection is too sensitive / not sensitive, change <code>NOISE_RMS_THRESHOLD</code>.
           </div>
         )}
+
+        {result?.detected && (
+  <button
+    onClick={() => onNoiseDetected(result)}
+    style={{
+      marginTop: 12,
+      background: "black",
+      color: "white",
+      padding: "10px 14px",
+      borderRadius: 12,
+      border: "none",
+      cursor: "pointer",
+      width: "100%",
+    }}
+  >
+    Save to Map
+  </button>
+)}
       </div>
     </div>
   );
