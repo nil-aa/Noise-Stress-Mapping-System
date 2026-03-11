@@ -156,16 +156,28 @@ navigator.geolocation.getCurrentPosition(
         }}
       >
         {center && (
-          <Map
-            lat={center.lat}
-            lng={center.lng}
-            points={myReadings.map(r => ({
-              lat: r.latitude,
-              lng: r.longitude,
-              rms: r.stress_score,
-              createdAt: r.id
-            }))}
-          />
+<Map
+  lat={center.lat}
+  lng={center.lng}
+  points={[
+    ...myReadings.map(r => ({
+      lat: r.latitude,
+      lng: r.longitude,
+      rms: r.stress_score,
+      createdAt: r.id,
+      type: "mine"
+    })),
+    ...nearbyReadings
+    .filter(r => !myReadings.some(m => m.id === r.id))
+    .map(r => ({
+      lat: r.latitude,
+      lng: r.longitude,
+      rms: r.stress_score,
+      createdAt: r.id,
+      type: "other"
+    }))
+  ]}
+/>
         )}
 
         <button

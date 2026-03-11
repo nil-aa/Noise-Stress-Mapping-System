@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-
+import "./Map.css";
 // Fix default marker icon issue in React/Vite builds
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
@@ -12,6 +12,24 @@ L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
+});
+
+const myIcon = new L.Icon({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  className: "marker-mine",
+});
+
+const otherIcon = new L.Icon({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  className: "marker-other",
 });
 
 /**
@@ -37,7 +55,11 @@ const Map = ({ lat = 13.0827, lng = 80.2707, zoom = 16, points = [], heatPoints 
 
         {/* Noise points */}
         {points.map((p, idx) => (
-          <Marker key={`${p.createdAt || idx}-${idx}`} position={[p.lat, p.lng]}>
+          <Marker
+            key={`${p.createdAt || idx}-${idx}`}
+            position={[p.lat, p.lng]}
+            icon={p.type === "mine" ? myIcon : otherIcon}
+          >
             <Popup>
               <div>
                 <div><b>Noise detected</b></div>

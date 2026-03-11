@@ -1,0 +1,10 @@
+/* Your readings */
+.marker-mine {
+  filter: hue-rotate(0deg) saturate(1.2);
+  transform: scale(1.1);
+}
+
+/* Other users */
+.marker-other {
+  filter: hue-rotate(180deg) saturate(1.5);
+}
