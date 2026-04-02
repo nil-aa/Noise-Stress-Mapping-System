@@ -12,6 +12,11 @@ class NoiseReading(Base):
     longitude = Column(Float, nullable=True)
     stress_score = Column(Float)
     timestamp = Column(DateTime, default=datetime.utcnow)
+    incident_type = Column(String, nullable=True)
+    notes = Column(String, nullable=True)
+    audio_path = Column(String, nullable=True)
+    audio_mime_type = Column(String, nullable=True)
+    audio_duration_sec = Column(Float, nullable=True)
 
     user_id = Column(Integer, ForeignKey("users.id"))
     user = relationship("User")

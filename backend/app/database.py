@@ -31,11 +31,8 @@ Base = declarative_base()
 
 
 def init_db():
-    """Create tables and apply minimal schema backfills for local SQLite DBs."""
+    """Create tables and apply lightweight schema backfills."""
     Base.metadata.create_all(bind=engine)
-
-    if "sqlite" not in DATABASE_URL:
-        return
 
     inspector = inspect(engine)
     if "noise_readings" not in inspector.get_table_names():
@@ -51,3 +48,13 @@ def init_db():
             conn.execute(text("ALTER TABLE noise_readings ADD COLUMN latitude FLOAT"))
         if "longitude" not in columns:
             conn.execute(text("ALTER TABLE noise_readings ADD COLUMN longitude FLOAT"))
+        if "incident_type" not in columns:
+            conn.execute(text("ALTER TABLE noise_readings ADD COLUMN incident_type VARCHAR"))
+        if "notes" not in columns:
+            conn.execute(text("ALTER TABLE noise_readings ADD COLUMN notes VARCHAR"))
+        if "audio_path" not in columns:
+            conn.execute(text("ALTER TABLE noise_readings ADD COLUMN audio_path VARCHAR"))
+        if "audio_mime_type" not in columns:
+            conn.execute(text("ALTER TABLE noise_readings ADD COLUMN audio_mime_type VARCHAR"))
+        if "audio_duration_sec" not in columns:
+            conn.execute(text("ALTER TABLE noise_readings ADD COLUMN audio_duration_sec FLOAT"))

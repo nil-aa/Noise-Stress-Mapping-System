@@ -6,6 +6,9 @@ class ReadingCreate(BaseModel):
     latitude: float
     longitude: float
     stress_score: float
+    incident_type: str | None = None
+    notes: str | None = None
+    audio_duration_sec: float | None = None
 
 
 class ReadingResponse(BaseModel):

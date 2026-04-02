@@ -1,91 +1,83 @@
 import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import "./Auth.css";
 
-const Login = () => {
+function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+
     try {
-      const res = await login(form);
-      localStorage.setItem("token", res.data.access_token);
-      navigate("/");
-    } catch (err) {
-      alert("Invalid credentials");
+      const response = await login(form);
+      localStorage.setItem("token", response.data.access_token);
+      localStorage.setItem("refresh_token", response.data.refresh_token);
+      navigate(location.state?.from || "/dashboard");
+    } catch {
+      setError("Invalid credentials. Please verify your email and password.");
     }
   };
 
   return (
-    <div style={styles.container}>
-      <form onSubmit={handleSubmit} style={styles.card}>
-        <h2>Login</h2>
+    <div className="auth-page">
+      <Navbar />
+      <main className="auth-main">
+        <section className="auth-panel auth-panel-info">
+          <span className="section-label">Welcome Back</span>
+          <h1>Return to the live monitoring dashboard.</h1>
+          <p>
+            Sign in to review personal readings, shared neighborhood reports, and the refreshed
+            stress map interface.
+          </p>
+        </section>
 
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          style={styles.input}
-        />
+        <section className="auth-panel auth-panel-form">
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <div>
+              <span className="section-label">Sign In</span>
+              <h2>Access your workspace</h2>
+            </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          style={styles.input}
-        />
+            <label className="auth-field">
+              <span>Email</span>
+              <input
+                required
+                type="email"
+                value={form.email}
+                onChange={(event) => setForm({ ...form, email: event.target.value })}
+              />
+            </label>
 
-        <button style={styles.button}>Login</button>
+            <label className="auth-field">
+              <span>Password</span>
+              <input
+                required
+                type="password"
+                value={form.password}
+                onChange={(event) => setForm({ ...form, password: event.target.value })}
+              />
+            </label>
 
-        <p>
-          Don't have an account?{" "}
-          <span onClick={() => navigate("/register")} style={styles.link}>
-            Register
-          </span>
-        </p>
-      </form>
+            {error && <p className="auth-error">{error}</p>}
+
+            <button className="auth-submit" type="submit">
+              Sign In
+            </button>
+
+            <p className="auth-switch">
+              Need an account? <Link to="/register">Create one here</Link>
+            </p>
+          </form>
+        </section>
+      </main>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#f5f5f5",
-  },
-  card: {
-    padding: "40px",
-    background: "white",
-    borderRadius: "12px",
-    width: "320px",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    margin: "10px 0",
-    borderRadius: "8px",
-    border: "1px solid #ddd",
-  },
-  button: {
-    width: "100%",
-    padding: "10px",
-    background: "black",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-  },
-  link: {
-    color: "blue",
-    cursor: "pointer",
-  },
-};
+}
 
 export default Login;

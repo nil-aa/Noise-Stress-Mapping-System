@@ -1,8 +1,10 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useEffect } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import * as L from "leaflet";
+import "leaflet.heat";
 import "./Map.css";
-// Fix default marker icon issue in React/Vite builds
+
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
@@ -17,78 +19,153 @@ L.Icon.Default.mergeOptions({
 const myIcon = new L.Icon({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon2x,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
+  shadowUrl: markerShadow,
+  iconSize: [30, 49],
+  iconAnchor: [15, 49],
+  popupAnchor: [1, -38],
+  shadowSize: [41, 41],
   className: "marker-mine",
 });
 
 const otherIcon = new L.Icon({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
+  shadowSize: [41, 41],
   className: "marker-other",
 });
 
-/**
- * points: [{ lat, lng, rms, peak, createdAt }]
- */
-const Map = ({ lat = 13.0827, lng = 80.2707, zoom = 16, points = [], heatPoints = [] }) => {
+const predictionIcon = new L.Icon({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+  iconSize: [28, 46],
+  iconAnchor: [14, 46],
+  popupAnchor: [1, -36],
+  shadowSize: [41, 41],
+  className: "marker-prediction",
+});
+
+function Heatmap({ heatPoints }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map || !heatPoints || heatPoints.length === 0) {
+      return undefined;
+    }
+
+    const heatData = heatPoints
+      .filter((point) => point.latitude && point.longitude)
+      .map((point) => [
+        Number(point.latitude),
+        Number(point.longitude),
+        Number(point.average_stress),
+      ]);
+
+    if (heatData.length === 0) {
+      return undefined;
+    }
+
+    const heatLayer = L.heatLayer(heatData, {
+      radius: 35,
+      blur: 25,
+      maxZoom: 17,
+      max: 1,
+    }).addTo(map);
+
+    return () => {
+      map.removeLayer(heatLayer);
+    };
+  }, [heatPoints, map]);
+
+  return null;
+}
+
+function RecenterMap({ center, zoom }) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.setView(center, zoom, {
+      animate: true,
+      duration: 0.75,
+    });
+  }, [center, map, zoom]);
+
+  return null;
+}
+
+function Map({ lat = 13.0827, lng = 80.2707, zoom = 16, points = [], heatPoints = [] }) {
   const center = [lat, lng];
 
   return (
-    <div style={{ height: "70vh", width: "100%", borderRadius: "12px", overflow: "hidden" }}>
-      <MapContainer center={center} zoom={zoom} scrollWheelZoom={true} style={{ height: "100%", width: "100%" }}>
+    <div className="map-shell">
+      <MapContainer center={center} zoom={zoom} scrollWheelZoom style={{ height: "100%", width: "100%" }}>
+        <RecenterMap center={center} zoom={zoom} />
         <TileLayer
           attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Center marker (optional: your default location) */}
-        {/* <Marker position={center}>
-          <Popup>
-            Center: {lat}, {lng}
-          </Popup>
-        </Marker> */}
+        <Heatmap heatPoints={heatPoints} />
 
-        {/* Noise points */}
-        {points.map((p, idx) => (
+        {points.map((point, index) => (
           <Marker
-            key={`${p.createdAt || idx}-${idx}`}
-            position={[p.lat, p.lng]}
-            icon={p.type === "mine" ? myIcon : otherIcon}
+            key={`${point.createdAt || index}-${index}`}
+            position={[point.lat, point.lng]}
+            icon={
+              point.type === "mine"
+                ? myIcon
+                : point.type === "prediction"
+                  ? predictionIcon
+                  : otherIcon
+            }
           >
             <Popup>
-              <div>
-                <div><b>Noise detected</b></div>
-                <div>Lat/Lng: {p.lat.toFixed(6)}, {p.lng.toFixed(6)}</div>
-                {typeof p.rms === "number" && <div>RMS: {p.rms.toFixed(4)}</div>}
-                {typeof p.peak === "number" && <div>Peak: {p.peak.toFixed(4)}</div>}
+              <div className="map-popup">
+                <div>
+                  <b>
+                    {point.type === "mine"
+                      ? "Your reading"
+                      : point.type === "prediction"
+                        ? "Predicted locality stress"
+                        : "Community reading"}
+                  </b>
+                </div>
+                {point.label && <div>{point.label}</div>}
+                <div>
+                  Lat/Lng: {point.lat.toFixed(6)}, {point.lng.toFixed(6)}
+                </div>
+                {point.incidentType && <div>Incident: {point.incidentType}</div>}
+                {typeof point.rms === "number" && <div>Stress score: {point.rms.toFixed(4)}</div>}
+                {typeof point.peak === "number" && <div>Peak: {point.peak.toFixed(4)}</div>}
+                {point.notes && <div>Notes: {point.notes}</div>}
+                {point.predictionMeta?.target_time && (
+                  <div>Time: {new Date(point.predictionMeta.target_time).toLocaleString()}</div>
+                )}
+                {typeof point.predictionMeta?.confidence === "number" && (
+                  <div>Confidence: {Math.round(point.predictionMeta.confidence * 100)}%</div>
+                )}
+                {point.audioUrl && (
+                  <div style={{ marginTop: 8 }}>
+                    <audio controls preload="none" src={point.audioUrl} style={{ width: "100%" }} />
+                  </div>
+                )}
               </div>
             </Popup>
           </Marker>
         ))}
-        {/* Backend grid points (from noise.db via /heatmap-data) */}
-        {/* {heatPoints.map((p, idx) => (
-        <Marker
-            key={`heat-${p.latitude}-${p.longitude}-${idx}`}
-            position={[p.latitude, p.longitude]}
-        >
-            <Popup>
-            <div>
-                <div><b>Heatmap grid</b></div>
-                <div>Avg stress: {Number(p.average_stress).toFixed(3)}</div>
-                <div>Reports: {p.count}</div>
-                <div>Lat/Lng: {Number(p.latitude).toFixed(6)}, {Number(p.longitude).toFixed(6)}</div>
-            </div>
-            </Popup>
-        </Marker>
-        ))} */}
       </MapContainer>
+
+      <div className="heatmap-scale">
+        <div className="scale-label top">High</div>
+        <div className="scale-gradient" />
+        <div className="scale-label bottom">Low</div>
+      </div>
     </div>
   );
-};
+}
 
 export default Map;

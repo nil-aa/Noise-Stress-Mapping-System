@@ -1,80 +1,81 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import "./Auth.css";
 
-const Register = () => {
+function Register() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+
     try {
       await register(form);
-      alert("Account created! Please login.");
       navigate("/login");
     } catch {
-      alert("Registration failed");
+      setError("Registration failed. Try a different email or verify the backend is running.");
     }
   };
 
   return (
-    <div style={styles.container}>
-      <form onSubmit={handleSubmit} style={styles.card}>
-        <h2>Register</h2>
+    <div className="auth-page">
+      <Navbar />
+      <main className="auth-main">
+        <section className="auth-panel auth-panel-info">
+          <span className="section-label">Create Access</span>
+          <h1>Start using the project with a cleaner, more complete interface.</h1>
+          <p>
+            Register to unlock the dashboard, save readings to the map, and present the system with
+            a more polished multi-page experience.
+          </p>
+        </section>
 
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          style={styles.input}
-        />
+        <section className="auth-panel auth-panel-form">
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <div>
+              <span className="section-label">Register</span>
+              <h2>Set up your account</h2>
+            </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          style={styles.input}
-        />
+            <label className="auth-field">
+              <span>Email</span>
+              <input
+                required
+                type="email"
+                value={form.email}
+                onChange={(event) => setForm({ ...form, email: event.target.value })}
+              />
+            </label>
 
-        <button style={styles.button}>Register</button>
-      </form>
+            <label className="auth-field">
+              <span>Password</span>
+              <input
+                required
+                minLength={6}
+                type="password"
+                value={form.password}
+                onChange={(event) => setForm({ ...form, password: event.target.value })}
+              />
+            </label>
+
+            {error && <p className="auth-error">{error}</p>}
+
+            <button className="auth-submit" type="submit">
+              Create Account
+            </button>
+
+            <p className="auth-switch">
+              Already registered? <Link to="/login">Sign in instead</Link>
+            </p>
+          </form>
+        </section>
+      </main>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#f5f5f5",
-  },
-  card: {
-    padding: "40px",
-    background: "white",
-    borderRadius: "12px",
-    width: "320px",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    margin: "10px 0",
-    borderRadius: "8px",
-    border: "1px solid #ddd",
-  },
-  button: {
-    width: "100%",
-    padding: "10px",
-    background: "black",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-  },
-};
+}
 
 export default Register;
