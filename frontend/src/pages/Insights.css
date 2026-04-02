@@ -1,0 +1,127 @@
+.insights-main {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 30px 0 56px;
+}
+
+.insights-hero,
+.insight-card,
+.insights-band {
+  animation: rise-in 0.8s ease both;
+}
+
+.insights-hero {
+  max-width: 760px;
+}
+
+.insights-hero h1 {
+  margin: 16px 0;
+  font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  color: #13272f;
+}
+
+.insights-hero p {
+  color: #5c6c74;
+  font-size: 1.06rem;
+}
+
+.insight-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.insight-card,
+.insights-band {
+  padding: 24px;
+  border-radius: 28px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.insight-card h2,
+.insights-band h2 {
+  margin: 0 0 12px;
+  color: #13272f;
+}
+
+.insight-card p,
+.insights-list p {
+  margin: 0;
+  color: #5c6c74;
+}
+
+.insights-band {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 20px;
+}
+
+.insights-list {
+  display: grid;
+  gap: 14px;
+}
+
+.insights-actions {
+  margin-top: 24px;
+}
+
+.insights-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: #17313a;
+  color: #f7f2e7;
+  font-weight: 800;
+  box-shadow: 0 16px 28px rgba(19, 49, 60, 0.16);
+}
+
+.insights-cta:hover {
+  color: #f7f2e7;
+}
+
+.insight-card:hover,
+.insights-band:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px rgba(16, 34, 42, 0.1);
+}
+
+.insight-cards .insight-card:nth-child(1) {
+  animation-delay: 0.08s;
+}
+
+.insight-cards .insight-card:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.insight-cards .insight-card:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+@media (max-width: 900px) {
+  .insight-cards,
+  .insights-band {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .insights-main {
+    width: min(100% - 20px, 1100px);
+    padding-top: 18px;
+  }
+
+  .insight-card,
+  .insights-band {
+    padding: 20px;
+  }
+}

@@ -1,0 +1,151 @@
+.laws-main {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 30px 0 56px;
+}
+
+.laws-hero,
+.laws-card,
+.laws-panel {
+  animation: rise-in 0.7s ease both;
+}
+
+.laws-hero {
+  max-width: 820px;
+}
+
+.laws-hero h1 {
+  margin: 12px 0 16px;
+  font-size: clamp(2.8rem, 5.4vw, 4.9rem);
+  line-height: 0.98;
+  color: #13272f;
+}
+
+.laws-hero p,
+.laws-card p,
+.laws-panel p,
+.laws-step p,
+.source-card p,
+.source-card span {
+  color: #5c6c74;
+}
+
+.laws-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.laws-card,
+.laws-panel {
+  padding: 24px;
+  border-radius: 28px;
+  background: rgba(255, 252, 247, 0.82);
+  border: 1px solid rgba(23, 49, 58, 0.08);
+  box-shadow: 0 18px 40px rgba(16, 34, 42, 0.07);
+}
+
+.laws-card h2,
+.laws-panel h2 {
+  margin: 0 0 10px;
+  color: #13272f;
+}
+
+.laws-panel {
+  margin-top: 22px;
+}
+
+.laws-table-wrap {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.laws-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.laws-table th,
+.laws-table td {
+  text-align: left;
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(23, 49, 58, 0.08);
+}
+
+.laws-table th {
+  color: #13272f;
+  font-weight: 700;
+}
+
+.laws-list,
+.source-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.laws-steps {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.laws-step {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.laws-step strong {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #17313a;
+  color: #f7f2e7;
+}
+
+.source-card {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(23, 49, 58, 0.08);
+  background: rgba(255, 255, 255, 0.62);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.source-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 36px rgba(16, 34, 42, 0.08);
+}
+
+.source-card strong {
+  color: #13272f;
+}
+
+.source-card span {
+  font-size: 0.82rem;
+  word-break: break-word;
+}
+
+@media (max-width: 900px) {
+  .laws-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .laws-main {
+    width: min(100% - 20px, 1120px);
+    padding-top: 18px;
+  }
+
+  .laws-card,
+  .laws-panel {
+    padding: 20px;
+  }
+}
