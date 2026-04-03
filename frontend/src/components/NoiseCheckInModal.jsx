@@ -218,19 +218,19 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
         alignItems: "center",
         justifyContent: "center",
         padding: 16,
-        background: "rgba(11, 24, 30, 0.54)",
+        background: "rgba(18, 19, 26, 0.56)",
         backdropFilter: "blur(10px)",
       }}
     >
       <div
         style={{
           width: "min(560px, 100%)",
-          padding: 22,
-          borderRadius: 28,
-          border: "1px solid rgba(123, 157, 165, 0.14)",
+          padding: 24,
+          borderRadius: 30,
+          border: "1px solid rgba(62, 45, 36, 0.12)",
           background:
-            "linear-gradient(155deg, rgba(255, 250, 243, 0.98), rgba(244, 239, 229, 0.96))",
-          boxShadow: "0 30px 70px rgba(8, 20, 25, 0.22)",
+            "linear-gradient(155deg, rgba(255, 251, 246, 0.98), rgba(244, 236, 229, 0.96))",
+          boxShadow: "0 30px 70px rgba(31, 21, 16, 0.22)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
@@ -242,13 +242,13 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
                 fontWeight: 800,
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                color: "#5d7a80",
+                color: "#8a1111",
               }}
             >
               Live Capture
             </span>
-            <h3 style={{ margin: "10px 0 6px", fontSize: "1.7rem", color: "#13272f" }}>Noise Check-In</h3>
-            <p style={{ margin: 0, color: "#5c6c74" }}>
+            <h3 style={{ margin: "10px 0 6px", fontSize: "1.85rem", color: "#1d1816" }}>Noise Check-In</h3>
+            <p style={{ margin: 0, color: "#655d58" }}>
               Record a 10 second sample, estimate the stress score, and optionally save it to the map.
             </p>
           </div>
@@ -261,8 +261,8 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
               padding: 0,
               borderRadius: 14,
               border: "none",
-              background: "rgba(19, 49, 60, 0.08)",
-              color: "#17313a",
+              background: "rgba(18, 27, 49, 0.08)",
+              color: "#1d1816",
               fontSize: 20,
             }}
             type="button"
@@ -276,8 +276,8 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
             marginTop: 16,
             padding: 14,
             borderRadius: 18,
-            background: "rgba(136, 221, 199, 0.12)",
-            color: "#17313a",
+            background: "rgba(138, 17, 17, 0.06)",
+            color: "#1d1816",
           }}
         >
           <strong>Status:</strong> {statusLabel}
@@ -289,8 +289,8 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
               marginTop: 12,
               padding: 12,
               borderRadius: 16,
-              background: "rgba(212, 84, 62, 0.12)",
-              color: "#9f3c29",
+              background: "rgba(138, 17, 17, 0.1)",
+              color: "#8a1111",
             }}
           >
             {error}
@@ -306,8 +306,8 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
               padding: "0 18px",
               border: "none",
               borderRadius: 999,
-              background: "linear-gradient(135deg, #13313c, #235767)",
-              color: "#f8f2e7",
+              background: "linear-gradient(135deg, #8a1111, #b8261b)",
+              color: "#fff7f1",
               fontWeight: 800,
               opacity: status === "recording" || status === "processing" ? 0.5 : 1,
             }}
@@ -323,9 +323,9 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
               minHeight: 48,
               padding: "0 18px",
               borderRadius: 999,
-              border: "1px solid rgba(123, 157, 165, 0.24)",
+              border: "1px solid rgba(62, 45, 36, 0.16)",
               background: "rgba(255, 255, 255, 0.72)",
-              color: "#17313a",
+              color: "#1d1816",
               fontWeight: 800,
               opacity: status !== "recording" ? 0.5 : 1,
             }}
@@ -341,9 +341,9 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
               marginTop: 16,
               padding: 16,
               borderRadius: 18,
-              border: "1px solid rgba(123, 157, 165, 0.16)",
+              border: "1px solid rgba(62, 45, 36, 0.1)",
               background: "rgba(255, 255, 255, 0.7)",
-              color: "#17313a",
+              color: "#1d1816",
             }}
           >
             <div>
@@ -365,15 +365,15 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
         )}
 
         <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
-          <label style={{ display: "grid", gap: 6, color: "#17313a", fontWeight: 700 }}>
+          <label style={{ display: "grid", gap: 6, color: "#3a312c", fontWeight: 700 }}>
             <span>Incident type</span>
             <select
               value={incidentType}
               onChange={(event) => setIncidentType(event.target.value)}
               style={{
                 minHeight: 46,
-                borderRadius: 14,
-                border: "1px solid rgba(123, 157, 165, 0.24)",
+                borderRadius: 16,
+                border: "1px solid rgba(62, 45, 36, 0.16)",
                 padding: "0 12px",
                 background: "rgba(255,255,255,0.86)",
               }}
@@ -387,7 +387,7 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
             </select>
           </label>
 
-          <label style={{ display: "grid", gap: 6, color: "#17313a", fontWeight: 700 }}>
+          <label style={{ display: "grid", gap: 6, color: "#3a312c", fontWeight: 700 }}>
             <span>Notes for report</span>
             <textarea
               rows={3}
@@ -395,8 +395,8 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
               onChange={(event) => setNotes(event.target.value)}
               placeholder="Example: Ongoing night construction near residential block."
               style={{
-                borderRadius: 14,
-                border: "1px solid rgba(123, 157, 165, 0.24)",
+                borderRadius: 16,
+                border: "1px solid rgba(62, 45, 36, 0.16)",
                 padding: 12,
                 resize: "vertical",
                 background: "rgba(255,255,255,0.86)",
@@ -406,7 +406,7 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
         </div>
 
         {!result && (
-          <p style={{ margin: "14px 0 0", color: "#5c6c74", fontSize: 14 }}>
+          <p style={{ margin: "14px 0 0", color: "#655d58", fontSize: 14 }}>
             If detection feels too sensitive or too weak, tune the internal RMS threshold in the modal logic.
           </p>
         )}
@@ -420,8 +420,8 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
               marginTop: 16,
               border: "none",
               borderRadius: 18,
-              background: "linear-gradient(135deg, #f4ca6d, #ff9258)",
-              color: "#10222a",
+              background: "linear-gradient(135deg, #8a1111, #b8261b)",
+              color: "#fff7f1",
               fontWeight: 800,
             }}
             type="button"

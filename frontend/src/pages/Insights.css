@@ -16,14 +16,14 @@
 
 .insights-hero h1 {
   margin: 16px 0;
-  font-size: clamp(2.8rem, 5.5vw, 4.8rem);
-  line-height: 0.98;
+  font-size: clamp(3.1rem, 5.5vw, 5.1rem);
+  line-height: 0.94;
   letter-spacing: -0.05em;
-  color: #13272f;
+  color: #1d1816;
 }
 
 .insights-hero p {
-  color: #5c6c74;
+  color: var(--muted);
   font-size: 1.06rem;
 }
 
@@ -42,18 +42,20 @@
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .insight-card h2,
 .insights-band h2 {
   margin: 0 0 12px;
-  color: #13272f;
+  color: #1d1816;
 }
 
 .insight-card p,
 .insights-list p {
   margin: 0;
-  color: #5c6c74;
+  color: var(--muted);
 }
 
 .insights-band {
@@ -79,20 +81,20 @@
   min-height: 50px;
   padding: 0 22px;
   border-radius: 999px;
-  background: #17313a;
-  color: #f7f2e7;
+  background: linear-gradient(135deg, #8a1111, #b8261b);
+  color: #fff7f1;
   font-weight: 800;
-  box-shadow: 0 16px 28px rgba(19, 49, 60, 0.16);
+  box-shadow: 0 16px 28px rgba(138, 17, 17, 0.18);
 }
 
 .insights-cta:hover {
-  color: #f7f2e7;
+  color: #fff7f1;
 }
 
 .insight-card:hover,
 .insights-band:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 22px 44px rgba(16, 34, 42, 0.1);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 28px 50px rgba(45, 27, 18, 0.12);
 }
 
 .insight-cards .insight-card:nth-child(1) {

@@ -383,13 +383,27 @@ function App() {
                 {formatCoordinate(center?.lat)}, {formatCoordinate(center?.lng)}
               </strong>
             </div>
-            <div className="spotlight-card">
+            <div className="spotlight-card metric-spotlight metric-spotlight-light">
+              <div className="metric-spotlight-icon" aria-hidden="true">
+                ↗
+              </div>
               <span>Average stress</span>
-              <strong>{stats.averageStress.toFixed(2)}</strong>
+              <strong>{(stats.averageStress * 100).toFixed(1)}%</strong>
+              <div className="metric-spotlight-bar">
+                <div style={{ width: `${Math.min(100, Math.max(8, stats.averageStress * 100))}%` }} />
+              </div>
             </div>
-            <div className="spotlight-card">
+            <div className="spotlight-card metric-spotlight metric-spotlight-dark">
+              <div className="metric-spotlight-icon" aria-hidden="true">
+                ∣∣∣
+              </div>
               <span>Peak personal reading</span>
-              <strong>{stats.highestStress.toFixed(2)}</strong>
+              <strong>
+                {(stats.highestStress * 100).toFixed(1)} <small>dB</small>
+              </strong>
+              <div className="metric-spotlight-mark" aria-hidden="true">
+                ◖
+              </div>
             </div>
           </div>
         </section>
@@ -546,19 +560,10 @@ function App() {
               <span className="section-label">Interpretation</span>
               <h3>Quick reading guide</h3>
               <ul className="reading-guide">
-                <li>Blue to cyan indicates calmer regions with lighter reported stress.</li>
-                <li>Green to yellow suggests moderate environmental pressure building up.</li>
-                <li>Orange to red marks stronger recurring disturbance clusters.</li>
+                <li>White haze indicates lighter observed stress and fewer concentrated reports.</li>
+                <li>Peach to coral suggests a rising disturbance pattern in the surrounding cells.</li>
+                <li>Deep red marks the strongest recurring hotspot clusters on the map.</li>
               </ul>
-            </div>
-
-            <div className="sidebar-card accent-card">
-              <span className="section-label">Presentation Ready</span>
-              <h3>Built for demos and reviews</h3>
-              <p>
-                The redesigned UI now gives you a landing experience, a polished dashboard, and a
-                dedicated insights page so the project feels complete when you present it.
-              </p>
             </div>
 
             <div className="sidebar-card">

@@ -1,19 +1,20 @@
 :root {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  --heading-font: Cambria, Georgia, "Times New Roman", serif;
+  font-family: "Aptos", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --heading-font: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #13272f;
-  background: #f4f1eb;
-  --bg: #f4f1eb;
-  --surface: rgba(255, 252, 247, 0.82);
-  --surface-strong: #fbf8f3;
-  --line: rgba(36, 55, 63, 0.12);
-  --text: #13272f;
-  --muted: #5c6c74;
-  --accent: #17313a;
-  --accent-soft: #e8eeea;
-  --shadow: 0 18px 40px rgba(16, 34, 42, 0.07);
+  color: #191817;
+  background: #f5efe7;
+  --bg: #f5efe7;
+  --surface: rgba(255, 251, 246, 0.88);
+  --surface-strong: #fffaf5;
+  --line: rgba(62, 45, 36, 0.12);
+  --text: #191817;
+  --muted: #655d58;
+  --accent: #8a1111;
+  --accent-dark: #121b31;
+  --accent-soft: #f0e2db;
+  --shadow: 0 22px 44px rgba(45, 27, 18, 0.08);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -33,26 +34,86 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.55), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(220, 230, 227, 0.45), transparent 28%),
-    var(--bg);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    linear-gradient(180deg, #f7f1ea 0%, #f4ede6 100%);
+  font-family: "Aptos", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
 }
 
 body::before {
   content: "";
   position: fixed;
   inset: 0;
+  z-index: -2;
   background:
-    linear-gradient(rgba(19, 49, 60, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(19, 49, 60, 0.025) 1px, transparent 1px);
-  background-size: 64px 64px;
+    linear-gradient(rgba(62, 45, 36, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(62, 45, 36, 0.02) 1px, transparent 1px);
+  background-size: 72px 72px;
   pointer-events: none;
   mask-image: radial-gradient(circle at center, black, transparent 82%);
 }
 
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(117, 8, 16, 0.34), transparent 18%),
+    radial-gradient(circle at 78% 14%, rgba(15, 41, 88, 0.28), transparent 18%),
+    radial-gradient(circle at 52% 72%, rgba(8, 11, 24, 0.26), transparent 22%),
+    radial-gradient(circle at 82% 82%, rgba(145, 18, 30, 0.18), transparent 18%);
+  filter: blur(68px) saturate(1.22);
+  transform: scale(1.2);
+  opacity: 0.92;
+  animation: fluid-drift 14s ease-in-out infinite alternate;
+}
+
+#root::before,
+#root::after {
+  content: "";
+  position: fixed;
+  inset: -14vh -10vw;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(102px);
+  opacity: 0.94;
+  mix-blend-mode: multiply;
+  animation: lava-orbit-a 12s ease-in-out infinite alternate;
+}
+
+#root::before {
+  background:
+    radial-gradient(circle at 16% 24%, rgba(124, 8, 14, 0.82), transparent 22%),
+    radial-gradient(circle at 46% 54%, rgba(11, 19, 41, 0.42), transparent 20%),
+    radial-gradient(circle at 72% 26%, rgba(20, 58, 112, 0.54), transparent 18%),
+    radial-gradient(circle at 86% 12%, rgba(6, 9, 18, 0.4), transparent 18%);
+}
+
+#root::after {
+  background:
+    radial-gradient(circle at 78% 78%, rgba(154, 18, 30, 0.72), transparent 20%),
+    radial-gradient(circle at 28% 78%, rgba(16, 48, 96, 0.42), transparent 20%),
+    radial-gradient(circle at 10% 58%, rgba(5, 8, 17, 0.32), transparent 18%),
+    radial-gradient(circle at 56% 92%, rgba(78, 9, 14, 0.34), transparent 20%);
+  animation: lava-orbit-b 16s ease-in-out infinite alternate;
+  animation-delay: -5s;
+}
+
+body > .cinema-blob,
+#root > .cinema-blob {
+  display: none;
+}
+
 #root {
   min-height: 100vh;
+  position: relative;
+  isolation: isolate;
+}
+
+#root > * {
+  position: relative;
+  z-index: 1;
 }
 
 a {
@@ -87,8 +148,8 @@ h1,
 h2,
 h3 {
   font-family: var(--heading-font);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 500;
+  letter-spacing: -0.035em;
 }
 
 .section-label {
@@ -96,14 +157,10 @@ h3 {
   align-items: center;
   gap: 8px;
   margin-bottom: 10px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(23, 49, 58, 0.08);
-  background: rgba(255, 255, 255, 0.5);
-  color: #53666e;
-  font-size: 0.73rem;
+  color: var(--accent);
+  font-size: 0.76rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
@@ -141,6 +198,72 @@ h3 {
   }
 }
 
+@keyframes fluid-drift {
+  0% {
+    transform: scale(1.2) translate3d(-7%, -6%, 0) rotate(0deg);
+  }
+
+  25% {
+    transform: scale(1.28) translate3d(7%, -3%, 0) rotate(7deg);
+  }
+
+  50% {
+    transform: scale(1.34) translate3d(8%, 6%, 0) rotate(12deg);
+  }
+
+  75% {
+    transform: scale(1.26) translate3d(-5%, 8%, 0) rotate(-9deg);
+  }
+
+  100% {
+    transform: scale(1.24) translate3d(-8%, 3%, 0) rotate(-13deg);
+  }
+}
+
+@keyframes lava-orbit-a {
+  0% {
+    transform: translate3d(-8%, -4%, 0) scale(1) rotate(0deg);
+  }
+
+  20% {
+    transform: translate3d(8%, -10%, 0) scale(1.14) rotate(12deg);
+  }
+
+  45% {
+    transform: translate3d(14%, 4%, 0) scale(1.24) rotate(20deg);
+  }
+
+  70% {
+    transform: translate3d(-5%, 12%, 0) scale(0.96) rotate(8deg);
+  }
+
+  100% {
+    transform: translate3d(-14%, -2%, 0) scale(1.12) rotate(-16deg);
+  }
+}
+
+@keyframes lava-orbit-b {
+  0% {
+    transform: translate3d(10%, 4%, 0) scale(1.04) rotate(0deg);
+  }
+
+  20% {
+    transform: translate3d(-8%, 12%, 0) scale(1.16) rotate(-12deg);
+  }
+
+  50% {
+    transform: translate3d(-14%, -6%, 0) scale(0.9) rotate(-22deg);
+  }
+
+  75% {
+    transform: translate3d(6%, -12%, 0) scale(1.18) rotate(11deg);
+  }
+
+  100% {
+    transform: translate3d(13%, 2%, 0) scale(1.1) rotate(18deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -148,5 +271,11 @@ h3 {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+
+  body::after,
+  #root::before,
+  #root::after {
+    display: none !important;
   }
 }

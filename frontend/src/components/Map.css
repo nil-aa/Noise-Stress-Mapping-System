@@ -1,69 +1,249 @@
 .map-shell {
-  height: 70vh;
+  height: clamp(420px, 56vh, 560px);
   width: 100%;
   overflow: hidden;
   position: relative;
-  border-radius: 22px;
-  border: 1px solid rgba(123, 157, 165, 0.14);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+  border-radius: 34px;
+  border: 1px solid rgba(45, 22, 14, 0.18);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 244, 232, 0.14),
+    0 28px 48px rgba(42, 18, 11, 0.16);
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 214, 134, 0.24), transparent 28%),
+    linear-gradient(180deg, #3a2c20, #231912);
+}
+
+.map-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 410;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center, rgba(255, 234, 194, 0.2), transparent 34%),
+    linear-gradient(180deg, rgba(255, 214, 165, 0.08), rgba(20, 12, 8, 0.14));
+  mix-blend-mode: screen;
+}
+
+.map-shell-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 405;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 212, 118, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 212, 118, 0.22) 1px, transparent 1px),
+    linear-gradient(rgba(255, 235, 175, 0.08) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 235, 175, 0.08) 2px, transparent 2px);
+  background-size: 28px 28px, 28px 28px, 112px 112px, 112px 112px;
+  opacity: 0.62;
+  mask-image: radial-gradient(circle at center, black 48%, transparent 92%);
+  mix-blend-mode: screen;
 }
 
 .leaflet-container {
-  background: #d5e4e8;
+  background: #2b1e16;
+  filter: sepia(0.76) hue-rotate(-10deg) saturate(1.24) contrast(1.08) brightness(1.12);
 }
 
-.marker-mine {
-  filter: hue-rotate(-18deg) saturate(1.15) drop-shadow(0 8px 10px rgba(255, 146, 88, 0.28));
+.leaflet-control-zoom {
+  margin: 16px 0 0 16px;
+  border: 1px solid rgba(243, 223, 207, 0.16) !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  box-shadow: 0 14px 24px rgba(16, 9, 7, 0.32);
 }
 
-.marker-other {
-  filter: hue-rotate(180deg) saturate(1.35) drop-shadow(0 8px 10px rgba(41, 126, 170, 0.18));
+.leaflet-control-zoom a {
+  width: 38px !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  background: rgba(44, 28, 23, 0.88) !important;
+  color: #f9e8d8 !important;
+  border-bottom: 1px solid rgba(243, 223, 207, 0.12) !important;
 }
 
-.marker-prediction {
-  filter: hue-rotate(90deg) saturate(1.05) drop-shadow(0 10px 12px rgba(23, 49, 58, 0.24));
+.leaflet-control-attribution {
+  background: rgba(19, 12, 9, 0.72) !important;
+  color: rgba(255, 235, 214, 0.8) !important;
+  border-radius: 10px 0 0 0;
+}
+
+.leaflet-control-attribution a {
+  color: #ffcf9d !important;
+}
+
+.custom-pin-icon-wrapper {
+  background: transparent;
+  border: none;
+}
+
+.custom-pin {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.22);
+}
+
+.custom-pin span {
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: rgba(255, 250, 244, 0.9);
+  border: 1px solid rgba(31, 18, 13, 0.16);
+}
+
+.custom-pin-medium {
+  width: 26px;
+  height: 26px;
+}
+
+.custom-pin-large {
+  width: 30px;
+  height: 30px;
+}
+
+.custom-pin-small {
+  width: 22px;
+  height: 22px;
+}
+
+.custom-pin-mine {
+  background: linear-gradient(180deg, #f2fbff, #78d6ff 28%, #00a2ff 58%, #0051ff 100%);
+  border: 1px solid rgba(214, 245, 255, 0.72);
+  box-shadow:
+    0 14px 24px rgba(0, 55, 255, 0.26),
+    0 0 0 1px rgba(194, 233, 255, 0.24);
+}
+
+.custom-pin-other {
+  background: linear-gradient(180deg, #f8dca6, #cc8f4b 50%, #7c4a1a 100%);
+  border: 1px solid rgba(255, 232, 196, 0.46);
+}
+
+.custom-pin-prediction {
+  background: linear-gradient(180deg, #ffe7c8, #ea9f62 45%, #772a12 100%);
+  border: 1px solid rgba(255, 231, 193, 0.44);
 }
 
 .map-popup {
   color: #17313a;
 }
 
+.map-marker-legend {
+  position: absolute;
+  left: 16px;
+  bottom: 18px;
+  z-index: 700;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  max-width: calc(100% - 110px);
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(18, 11, 8, 0.72);
+  border: 1px solid rgba(255, 232, 211, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.map-marker-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #f6e8d8;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.map-key-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.map-key-dot-mine {
+  background: #009dff;
+  box-shadow: 0 0 12px rgba(0, 157, 255, 0.46);
+}
+
+.map-key-dot-other {
+  background: #b27b43;
+}
+
+.map-key-dot-prediction {
+  background: #ffbf7f;
+}
+
 .heatmap-scale {
   position: absolute;
-  right: 14px;
-  top: 14px;
-  bottom: 14px;
-  width: 46px;
+  right: 16px;
+  top: 18px;
+  bottom: 18px;
+  width: 54px;
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 700;
-  padding: 12px 8px;
-  border-radius: 18px;
-  background: rgba(255, 250, 243, 0.82);
+  padding: 16px 10px;
+  border-radius: 28px;
+  background: rgba(255, 245, 233, 0.88);
   backdrop-filter: blur(14px);
-  box-shadow: 0 18px 30px rgba(16, 34, 42, 0.14);
+  box-shadow: 0 18px 30px rgba(27, 18, 14, 0.22);
 }
 
 .scale-gradient {
   flex: 1;
-  width: 12px;
+  width: 14px;
   border-radius: 999px;
-  background: linear-gradient(to top, #295fd1, #3bbce0, #77d690, #f0c459, #d4543e);
+  background: linear-gradient(to top, #fff8f1, #ffdccc, #ffb197, #ff6a55, #d92020, #6d0505);
+  box-shadow: inset 0 0 0 1px rgba(120, 39, 22, 0.08);
 }
 
 .scale-label {
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #5d7a80;
+  color: #6f5b52;
 }
 
 .scale-label.top {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .scale-label.bottom {
-  margin-top: 8px;
+  margin-top: 10px;
+}
+
+@media (max-width: 720px) {
+  .map-shell {
+    height: clamp(360px, 52vh, 460px);
+    border-radius: 26px;
+  }
+
+  .map-marker-legend {
+    left: 12px;
+    right: 78px;
+    bottom: 12px;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 18px;
+  }
+
+  .map-marker-key {
+    font-size: 0.65rem;
+  }
+
+  .heatmap-scale {
+    right: 12px;
+    top: 12px;
+    bottom: 12px;
+    width: 48px;
+    padding: 12px 8px;
+  }
 }
