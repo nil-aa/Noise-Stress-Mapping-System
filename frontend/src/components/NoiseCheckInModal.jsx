@@ -215,22 +215,26 @@ function NoiseCheckInModal({ onClose, onNoiseDetected }) {
         inset: 0,
         zIndex: 9999,
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "center",
         padding: 16,
         background: "rgba(18, 19, 26, 0.56)",
         backdropFilter: "blur(10px)",
+        overflowY: "auto",
       }}
     >
       <div
         style={{
           width: "min(560px, 100%)",
+          maxHeight: "calc(100vh - 32px)",
+          margin: "auto 0",
           padding: 24,
           borderRadius: 30,
           border: "1px solid rgba(62, 45, 36, 0.12)",
           background:
             "linear-gradient(155deg, rgba(255, 251, 246, 0.98), rgba(244, 236, 229, 0.96))",
           boxShadow: "0 30px 70px rgba(31, 21, 16, 0.22)",
+          overflowY: "auto",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
