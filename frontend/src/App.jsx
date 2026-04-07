@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Navbar from "./components/Navbar";
 import Map from "./components/Map";
 import NoiseCheckInModal from "./components/NoiseCheckInModal";
+import { Link } from "react-router-dom";
 import {
   getHeatmapData,
   getCommunityReadings,
@@ -495,66 +496,77 @@ function App() {
                   {predictionLoading ? "Estimating..." : "Analyze Locality"}
                 </button>
               </form>
-
-              {predictionError && <p className="prediction-error">{predictionError}</p>}
-
-              {predictionResult && (
-                <div className="prediction-result">
-                  <div className="prediction-result-head">
-                    <strong>{predictionResult.mode_label}</strong>
-                    <span>{predictionResult.locality_name}</span>
-                  </div>
-                  <div className="prediction-score-row">
-                    <div>
-                      <span>Stress score</span>
-                      <strong>{predictionResult.predicted_stress_score.toFixed(2)}</strong>
-                    </div>
-                    <div>
-                      <span>Confidence</span>
-                      <strong>{Math.round(predictionResult.confidence * 100)}%</strong>
-                    </div>
-                  </div>
-                  <div className="prediction-meta">
-                    <p>Samples used: {predictionResult.samples_used}</p>
-                    <p>Close time matches: {predictionResult.matching_samples}</p>
-                    <p>Trend signal: {predictionResult.trend.toFixed(2)}</p>
-                  </div>
-                  <div className="report-actions">
-                    <button className="secondary-cta" disabled={reportLoading} onClick={handleGenerateReport} type="button">
-                      {reportLoading ? "Generating Report..." : "Generate Report"}
-                    </button>
-                  </div>
-                </div>
-              )}
-              {reportError && <p className="prediction-error">{reportError}</p>}
-              {reportResult && (
-                <div className="report-card">
-                  <div className="report-card-head">
-                    <div>
-                      <span className="section-label">Authority Report</span>
-                      <h4>{reportResult.locality_name}</h4>
-                    </div>
-                    <button className="secondary-cta" onClick={handlePrintReport} type="button">
-                      Print / Save PDF
-                    </button>
-                  </div>
-                  <p>{reportResult.summary}</p>
-                  <div className="report-metrics">
-                    <p>Average stress: {reportResult.average_stress_score.toFixed(2)}</p>
-                    <p>Peak stress: {reportResult.peak_stress_score.toFixed(2)}</p>
-                    <p>Night incidents: {reportResult.nighttime_incident_count}</p>
-                    <p>Audio proofs: {reportResult.audio_evidence_count}</p>
-                  </div>
-                  <div className="report-list">
-                    {reportResult.recommendations.map((item) => (
-                      <p key={item}>{item}</p>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
-            <div className="sidebar-card">
+            {(predictionError || predictionResult || reportError || reportResult) && (
+              <div className="sidebar-card analysis-panel">
+                <div className="analysis-panel-header">
+                  <span className="section-label">Analysis Output</span>
+                  <h3>Locality prediction and report</h3>
+                </div>
+
+                {predictionError && <p className="prediction-error">{predictionError}</p>}
+
+                {predictionResult && (
+                  <div className="prediction-result">
+                    <div className="prediction-result-head">
+                      <strong>{predictionResult.mode_label}</strong>
+                      <span>{predictionResult.locality_name}</span>
+                    </div>
+                    <div className="prediction-score-row">
+                      <div>
+                        <span>Stress score</span>
+                        <strong>{predictionResult.predicted_stress_score.toFixed(2)}</strong>
+                      </div>
+                      <div>
+                        <span>Confidence</span>
+                        <strong>{Math.round(predictionResult.confidence * 100)}%</strong>
+                      </div>
+                    </div>
+                    <div className="prediction-meta">
+                      <p>Samples used: {predictionResult.samples_used}</p>
+                      <p>Close time matches: {predictionResult.matching_samples}</p>
+                      <p>Trend signal: {predictionResult.trend.toFixed(2)}</p>
+                    </div>
+                    <div className="report-actions">
+                      <button className="secondary-cta" disabled={reportLoading} onClick={handleGenerateReport} type="button">
+                        {reportLoading ? "Generating Report..." : "Generate Report"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {reportError && <p className="prediction-error">{reportError}</p>}
+
+                {reportResult && (
+                  <div className="report-card">
+                    <div className="report-card-head">
+                      <div>
+                        <span className="section-label">Authority Report</span>
+                        <h4>{reportResult.locality_name}</h4>
+                      </div>
+                      <button className="secondary-cta" onClick={handlePrintReport} type="button">
+                        Print / Save PDF
+                      </button>
+                    </div>
+                    <p>{reportResult.summary}</p>
+                    <div className="report-metrics">
+                      <p>Average stress: {reportResult.average_stress_score.toFixed(2)}</p>
+                      <p>Peak stress: {reportResult.peak_stress_score.toFixed(2)}</p>
+                      <p>Night incidents: {reportResult.nighttime_incident_count}</p>
+                      <p>Audio proofs: {reportResult.audio_evidence_count}</p>
+                    </div>
+                    <div className="report-list">
+                      {reportResult.recommendations.map((item) => (
+                        <p key={item}>{item}</p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="sidebar-card method-card">
               <span className="section-label">Method</span>
               <h3>How this dashboard reads the environment</h3>
               <p>
@@ -564,7 +576,7 @@ function App() {
               </p>
             </div>
 
-            <div className="sidebar-card">
+            <div className="sidebar-card interpretation-card">
               <span className="section-label">Interpretation</span>
               <h3>Quick reading guide</h3>
               <ul className="reading-guide">
@@ -574,26 +586,19 @@ function App() {
               </ul>
             </div>
 
-            <div className="sidebar-card">
-              <span className="section-label">Stored Evidence</span>
-              <h3>Replay your recorded proof</h3>
-              <div className="evidence-list">
-                {myReadings.filter((reading) => reading.audio_url).slice(0, 5).map((reading) => (
-                  <div className="evidence-item" key={reading.id}>
-                    <div className="evidence-copy">
-                      <strong>{reading.incident_type || "Recorded disturbance"}</strong>
-                      <span>{new Date(reading.timestamp).toLocaleString()}</span>
-                    </div>
-                    {reading.notes && <p>{reading.notes}</p>}
-                    <audio controls preload="none" src={reading.audio_url} />
-                  </div>
-                ))}
-                {myReadings.filter((reading) => reading.audio_url).length === 0 && (
-                  <p>No saved audio proof yet. Record a check-in and save it to build your evidence log.</p>
-                )}
-              </div>
+            <div className="sidebar-card evidence-link-card">
+              <span className="section-label">Evidence Vault</span>
+              <h3>Your saved recordings live in one place</h3>
+              <p>
+                Review incident notes, replay uploaded audio, and keep a dedicated record of your
+                strongest evidence without crowding the main dashboard.
+              </p>
+              <Link className="secondary-cta evidence-link" to="/evidence">
+                Open Evidence Page
+              </Link>
             </div>
           </aside>
+
         </section>
       </main>
 
