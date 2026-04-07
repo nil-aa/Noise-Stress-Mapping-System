@@ -10,7 +10,7 @@
 
 .landing-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 1fr);
   gap: 24px;
   align-items: center;
   margin-bottom: 32px;
@@ -21,6 +21,14 @@
 .feature-card,
 .landing-band {
   animation: rise-in 0.8s ease both;
+}
+
+.landing-copy {
+  display: block;
+}
+
+.landing-copy-content {
+  min-width: 0;
 }
 
 .landing-visual {
@@ -47,6 +55,41 @@
   flex-wrap: wrap;
   gap: 14px;
   margin-top: 26px;
+}
+
+.landing-emotion-stack {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 1 / 1;
+  justify-self: stretch;
+  overflow: hidden;
+}
+
+.landing-emotion {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.landing-emotion-happy {
+  opacity: 1;
+}
+
+.landing-emotion-angry {
+  opacity: 0;
+}
+
+.landing-emotion-stack:hover .landing-emotion-happy,
+.landing-emotion-stack:focus-within .landing-emotion-happy {
+  opacity: 0;
+}
+
+.landing-emotion-stack:hover .landing-emotion-angry,
+.landing-emotion-stack:focus-within .landing-emotion-angry {
+  opacity: 1;
 }
 
 .landing-primary,
@@ -227,6 +270,15 @@
   .landing-band,
   .feature-grid {
     grid-template-columns: 1fr;
+  }
+
+  .landing-copy {
+    display: grid;
+  }
+
+  .landing-emotion-stack {
+    justify-self: start;
+    max-width: 420px;
   }
 }
 

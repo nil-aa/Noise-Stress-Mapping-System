@@ -374,7 +374,7 @@ function App() {
               a dashboard designed for presentations as well as day-to-day monitoring.
             </p>
 
-            <div className="hero-actions">
+            {/* <div className="hero-actions">
               <button className="primary-cta" onClick={() => setIsCheckInOpen(true)}>
                 Start Noise Check-In
               </button>
@@ -382,7 +382,7 @@ function App() {
                 <span className="hero-status-label">Status</span>
                 <strong>{statusMessage}</strong>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="hero-spotlight">

@@ -31,22 +31,28 @@ function Landing() {
       <main className="landing-main">
         <section className="landing-hero">
           <div className="landing-copy">
-            <span className="section-label">Environmental Noise Monitoring</span>
-            <h1>Visualizing Noise to Improve Urban Living</h1>
-            <p>
-              Collect geotagged noise readings, analyze stress trends, and deliver localized insights
-              for communities, researchers, and public authorities.
-            </p>
+            <div className="landing-copy-content">
+              <span className="section-label">Environmental Noise Monitoring</span>
+              <h1>Visualizing Noise to Improve Urban Living</h1>
+              <p>
+                Collect geotagged noise readings, analyze stress trends, and deliver localized insights
+                for communities, researchers, and public authorities.
+              </p>
 
-            <div className="landing-actions">
-              <Link className="landing-primary" to={hasToken ? "/dashboard" : "/register"}>
-                {hasToken ? "Open Dashboard" : "Create Account"}
-              </Link>
-              <Link className="landing-secondary" to="/insights">
-                View Insights
-              </Link>
+              <div className="landing-actions">
+                <Link className="landing-primary" to={hasToken ? "/dashboard" : "/register"}>
+                  {hasToken ? "Open Dashboard" : "Create Account"}
+                </Link>
+                <Link className="landing-secondary" to="/insights">
+                  View Insights
+                </Link>
+              </div>
             </div>
+          </div>
 
+          <div className="landing-emotion-stack" aria-label="Stress mood preview">
+            <img className="landing-emotion landing-emotion-happy" src="/happy.png" alt="Happy mood" />
+            <img className="landing-emotion landing-emotion-angry" src="/angry.png" alt="Angry mood" />
           </div>
 
         </section>
