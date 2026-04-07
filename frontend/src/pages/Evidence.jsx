@@ -46,10 +46,10 @@ function Evidence() {
       <main className="evidence-main">
         <section className="evidence-hero">
           <span className="section-label">Evidence Vault</span>
-          <h1>Your saved recordings, incident notes, and replayable proof.</h1>
+          <h1>Review saved audio, notes, and field evidence.</h1>
           <p>
-            Use this page to revisit the audio clips and written notes you attached to field readings.
-            It is designed to keep the dashboard simpler while preserving evidence for complaints and reports.
+            Access the supporting material linked to your readings without cluttering the main
+            dashboard. Use it to review incidents, verify context, and prepare reporting records.
           </p>
         </section>
 
@@ -63,7 +63,7 @@ function Evidence() {
                 <article className="evidence-card" key={reading.id}>
                   <div className="evidence-card-head">
                     <div>
-                      <span className="section-label">{reading.incident_type || "Recorded disturbance"}</span>
+                      <span className="section-label">{reading.incident_type || "Recorded incident"}</span>
                       <h2>{new Date(reading.timestamp).toLocaleString()}</h2>
                     </div>
                     <strong>{(Number(reading.stress_score || 0) * 100).toFixed(1)}%</strong>
@@ -80,13 +80,13 @@ function Evidence() {
                   {reading.audio_url ? (
                     <audio controls preload="none" src={reading.audio_url} />
                   ) : (
-                    <p className="evidence-muted">No audio recording attached for this incident.</p>
+                    <p className="evidence-muted">No audio file attached to this record.</p>
                   )}
                 </article>
               ))
             ) : (
               <div className="evidence-card">
-                <p>No stored evidence yet. Save a reading with notes or audio to build your evidence vault.</p>
+                <p>No saved evidence yet. Add notes or audio to a reading to build your record.</p>
               </div>
             )}
           </section>

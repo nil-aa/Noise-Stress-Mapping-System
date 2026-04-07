@@ -32,6 +32,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
   margin-top: 28px;
+  align-items: stretch;
 }
 
 .insight-card,
@@ -44,6 +45,12 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   position: relative;
   overflow: hidden;
+}
+
+.insight-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .insight-card h2,
@@ -63,6 +70,7 @@
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   gap: 20px;
+  align-items: stretch;
 }
 
 .insights-list {

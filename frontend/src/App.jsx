@@ -36,7 +36,7 @@ function App() {
   const [isCheckInOpen, setIsCheckInOpen] = useState(false);
   const [center, setCenter] = useState(null);
   const [isLoadingLocation, setIsLoadingLocation] = useState(true);
-  const [statusMessage, setStatusMessage] = useState("Finding your live monitoring zone...");
+  const [statusMessage, setStatusMessage] = useState("Locating your monitoring area...");
 
   const [myReadings, setMyReadings] = useState([]);
   const [communityReadings, setCommunityReadings] = useState([]);
@@ -69,7 +69,7 @@ function App() {
     if (!navigator.geolocation) {
       const fallback = { lat: 13.0827, lng: 80.2707 };
       setCenter(fallback);
-      setStatusMessage("Using Chennai as the fallback monitoring region.");
+      setStatusMessage("Showing Chennai as the default monitoring area.");
       setIsLoadingLocation(false);
       refreshHeatmap();
       loadUserData().catch((error) => {
@@ -84,7 +84,7 @@ function App() {
         const lng = pos.coords.longitude;
 
         setCenter({ lat, lng });
-        setStatusMessage("Live environmental stress view synced to your current location.");
+        setStatusMessage("Map centered on your current location.");
         setIsLoadingLocation(false);
 
         refreshHeatmap();
@@ -97,7 +97,7 @@ function App() {
 
         const fallback = { lat: 13.0827, lng: 80.2707 };
         setCenter(fallback);
-        setStatusMessage("Location access was unavailable, so the dashboard is centered on Chennai.");
+        setStatusMessage("Location unavailable. Showing Chennai instead.");
         setIsLoadingLocation(false);
 
         refreshHeatmap();
@@ -186,7 +186,7 @@ function App() {
         const lng = pos.coords.longitude;
 
         setCenter({ lat, lng });
-        setStatusMessage("New reading captured and dashboard refreshed.");
+        setStatusMessage("Reading captured and map refreshed.");
 
         try {
           const stressScore = rmsToStressScore(payload.rms);
@@ -209,14 +209,14 @@ function App() {
               });
             } catch (audioError) {
               console.error("Reading saved but audio upload failed:", audioError);
-              setStatusMessage("Reading saved, but the audio proof could not be uploaded.");
+              setStatusMessage("Reading saved, but audio upload failed.");
             }
           }
 
           await refreshHeatmap();
           await loadUserData();
           if (!payload.audioBlob) {
-            setStatusMessage("New reading captured and saved to the database.");
+            setStatusMessage("Reading saved successfully.");
           }
           setIsCheckInOpen(false);
         } catch (error) {
@@ -260,7 +260,7 @@ function App() {
         lat: resolvedLocality.lat,
         lng: resolvedLocality.lng,
       });
-      setStatusMessage(`Showing ${prediction.mode_label.toLowerCase()} for ${resolvedLocality.name}.`);
+      setStatusMessage(`${prediction.mode_label} ready for ${resolvedLocality.name}.`);
     } catch (error) {
       console.error(error);
       setPredictionResult(null);
@@ -367,11 +367,11 @@ function App() {
       <main className="dashboard-page">
         <section className="dashboard-hero">
           <div className="dashboard-hero-copy">
-            <span className="section-label">Environmental Intelligence</span>
-            <h1>Track neighborhood noise stress with a cleaner live command center.</h1>
+            <span className="section-label">Noise Stress Dashboard</span>
+            <h1>Monitor local noise patterns with a focused, live view.</h1>
             <p>
-              Compare your submitted readings, spot nearby hotspots, and capture new check-ins from
-              a dashboard designed for presentations as well as day-to-day monitoring.
+              Review your readings, inspect nearby hotspots, and capture new observations from one
+              clear operational dashboard.
             </p>
 
             {/* <div className="hero-actions">
@@ -387,7 +387,7 @@ function App() {
 
           <div className="hero-spotlight">
             <div className="spotlight-card spotlight-card-main">
-              <span>Current center</span>
+              <span>Map center</span>
               <strong>
                 {formatCoordinate(center?.lat)}, {formatCoordinate(center?.lng)}
               </strong>
@@ -396,7 +396,7 @@ function App() {
               <div className="metric-spotlight-icon" aria-hidden="true">
                 ↗
               </div>
-              <span>Average stress</span>
+              <span>Average stress score</span>
               <strong>{(stats.averageStress * 100).toFixed(1)}%</strong>
               <div className="metric-spotlight-bar">
                 <div style={{ width: `${Math.min(100, Math.max(8, stats.averageStress * 100))}%` }} />
@@ -406,9 +406,9 @@ function App() {
               <div className="metric-spotlight-icon" aria-hidden="true">
                 ∣∣∣
               </div>
-              <span>Peak personal reading</span>
+              <span>Highest personal score</span>
               <strong>
-                {(stats.highestStress * 100).toFixed(1)} <small>dB</small>
+                {(stats.highestStress * 100).toFixed(1)} <small>score</small>
               </strong>
               <div className="metric-spotlight-mark" aria-hidden="true">
                 ◖
@@ -421,17 +421,17 @@ function App() {
           <article className="stat-card">
             <span>Your submissions</span>
             <strong>{stats.myReports}</strong>
-            <p>Personal readings currently contributing to the map.</p>
+            <p>Your recorded check-ins currently shown on the map.</p>
           </article>
           <article className="stat-card">
-            <span>Nearby reports</span>
+            <span>Community readings</span>
             <strong>{stats.nearbyReports}</strong>
-            <p>Shared neighborhood data points inside the active radius.</p>
+            <p>Nearby public readings included in the current view.</p>
           </article>
           <article className="stat-card">
-            <span>Heatmap cells</span>
+            <span>Heatmap zones</span>
             <strong>{stats.heatZones}</strong>
-            <p>Grid zones aggregated by backend stress intensity.</p>
+            <p>Map cells generated from aggregated stress values.</p>
           </article>
         </section>
 
@@ -440,7 +440,7 @@ function App() {
             <div className="section-heading">
               <div>
                 <span className="section-label">Live Map</span>
-                <h2>Stress mapping viewport</h2>
+                <h2>Noise stress map</h2>
               </div>
               <button className="secondary-cta" onClick={() => setIsCheckInOpen(true)}>
                 Add Reading
@@ -452,18 +452,18 @@ function App() {
             ) : (
               <div className="map-loading-card">
                 <div className="map-loader" />
-                <p>{isLoadingLocation ? "Initializing map and requesting location access..." : statusMessage}</p>
+                <p>{isLoadingLocation ? "Loading the map and requesting location access..." : statusMessage}</p>
               </div>
             )}
           </div>
 
           <aside className="dashboard-sidebar">
             <div className="sidebar-card search-card">
-              <span className="section-label">Temporal Explorer</span>
-              <h3>Estimate stress for any locality and time</h3>
+              <span className="section-label">Prediction</span>
+              <h3>Estimate stress by locality and time</h3>
               <p>
-                Search a place name, choose a past or future timestamp, and the system will estimate
-                the likely noise stress using nearby historical readings and time-based trends.
+                Select a Chennai locality and timestamp to estimate likely stress from nearby
+                readings and time-based patterns.
               </p>
 
               <form className="prediction-form" onSubmit={handlePredictionSearch}>
@@ -493,7 +493,7 @@ function App() {
                 </label>
 
                 <button className="secondary-cta search-cta" disabled={predictionLoading} type="submit">
-                  {predictionLoading ? "Estimating..." : "Analyze Locality"}
+                  {predictionLoading ? "Estimating..." : "Run Estimate"}
                 </button>
               </form>
             </div>
@@ -501,8 +501,8 @@ function App() {
             {(predictionError || predictionResult || reportError || reportResult) && (
               <div className="sidebar-card analysis-panel">
                 <div className="analysis-panel-header">
-                  <span className="section-label">Analysis Output</span>
-                  <h3>Locality prediction and report</h3>
+                  <span className="section-label">Results</span>
+                  <h3>Prediction and report output</h3>
                 </div>
 
                 {predictionError && <p className="prediction-error">{predictionError}</p>}
@@ -515,7 +515,7 @@ function App() {
                     </div>
                     <div className="prediction-score-row">
                       <div>
-                        <span>Stress score</span>
+                        <span>Predicted score</span>
                         <strong>{predictionResult.predicted_stress_score.toFixed(2)}</strong>
                       </div>
                       <div>
@@ -525,8 +525,8 @@ function App() {
                     </div>
                     <div className="prediction-meta">
                       <p>Samples used: {predictionResult.samples_used}</p>
-                      <p>Close time matches: {predictionResult.matching_samples}</p>
-                      <p>Trend signal: {predictionResult.trend.toFixed(2)}</p>
+                      <p>Time matches: {predictionResult.matching_samples}</p>
+                      <p>Trend score: {predictionResult.trend.toFixed(2)}</p>
                     </div>
                     <div className="report-actions">
                       <button className="secondary-cta" disabled={reportLoading} onClick={handleGenerateReport} type="button">
@@ -542,7 +542,7 @@ function App() {
                   <div className="report-card">
                     <div className="report-card-head">
                       <div>
-                        <span className="section-label">Authority Report</span>
+                        <span className="section-label">Report</span>
                         <h4>{reportResult.locality_name}</h4>
                       </div>
                       <button className="secondary-cta" onClick={handlePrintReport} type="button">
@@ -551,10 +551,10 @@ function App() {
                     </div>
                     <p>{reportResult.summary}</p>
                     <div className="report-metrics">
-                      <p>Average stress: {reportResult.average_stress_score.toFixed(2)}</p>
-                      <p>Peak stress: {reportResult.peak_stress_score.toFixed(2)}</p>
+                      <p>Average score: {reportResult.average_stress_score.toFixed(2)}</p>
+                      <p>Peak score: {reportResult.peak_stress_score.toFixed(2)}</p>
                       <p>Night incidents: {reportResult.nighttime_incident_count}</p>
-                      <p>Audio proofs: {reportResult.audio_evidence_count}</p>
+                      <p>Audio records: {reportResult.audio_evidence_count}</p>
                     </div>
                     <div className="report-list">
                       {reportResult.recommendations.map((item) => (
@@ -568,30 +568,29 @@ function App() {
 
             <div className="sidebar-card method-card">
               <span className="section-label">Method</span>
-              <h3>How this dashboard reads the environment</h3>
+              <h3>How readings become map signals</h3>
               <p>
-                Each check-in captures a short microphone sample, computes an RMS value, converts it
-                into a stress score, and then refreshes both your personal markers and the area
-                heatmap.
+                Each check-in captures a short audio sample, converts it into a stress score, and
+                updates both personal markers and the shared heatmap.
               </p>
             </div>
 
             <div className="sidebar-card interpretation-card">
-              <span className="section-label">Interpretation</span>
-              <h3>Quick reading guide</h3>
+              <span className="section-label">Guide</span>
+              <h3>How to read the map</h3>
               <ul className="reading-guide">
-                <li>White haze indicates lighter observed stress and fewer concentrated reports.</li>
-                <li>Peach to coral suggests a rising disturbance pattern in the surrounding cells.</li>
-                <li>Deep red marks the strongest recurring hotspot clusters on the map.</li>
+                <li>Light areas indicate lower observed stress and fewer clustered reports.</li>
+                <li>Peach and coral indicate rising disturbance across nearby cells.</li>
+                <li>Deep red highlights the strongest recurring hotspot zones.</li>
               </ul>
             </div>
 
             <div className="sidebar-card evidence-link-card">
               <span className="section-label">Evidence Vault</span>
-              <h3>Your saved recordings live in one place</h3>
+              <h3>Access saved recordings and notes</h3>
               <p>
-                Review incident notes, replay uploaded audio, and keep a dedicated record of your
-                strongest evidence without crowding the main dashboard.
+                Review uploaded audio, revisit notes, and keep supporting evidence separate from the
+                live dashboard.
               </p>
               <Link className="secondary-cta evidence-link" to="/evidence">
                 Open Evidence Page

@@ -6,15 +6,15 @@ import "./Insights.css";
 const sections = [
   {
     title: "Capture",
-    text: "Collect short, geotagged audio samples and user observations to document noise events.",
+    text: "Record short, geotagged observations with audio and notes to document noise incidents.",
   },
   {
-    title: "Transform",
-    text: "Normalize readings into a stress score to enable consistent aggregation across locations and time.",
+    title: "Analyze",
+    text: "Convert each reading into a stress score so patterns can be compared across time and location.",
   },
   {
-    title: "Communicate",
-    text: "Visualize trends through heatmaps, markers, and locality summaries for clear stakeholder briefing.",
+    title: "Report",
+    text: "Present hotspots, trends, and locality summaries in a format suitable for review and action.",
   },
 ];
 
@@ -28,10 +28,10 @@ function Insights() {
       <main className="insights-main">
         <section className="insights-hero">
           <span className="section-label">System Overview</span>
-          <h1>From sound samples to actionable noise insights.</h1>
+          <h1>From field readings to usable noise insights.</h1>
           <p>
-            Review how field recordings are converted into stress scores, mapped geographically,
-            and summarized for formal reporting.
+            See how the system captures observations, converts them into stress signals, and turns
+            them into maps and summaries for decision-making.
           </p>
         </section>
 
@@ -46,13 +46,13 @@ function Insights() {
 
         <section className="insights-band">
           <div>
-            <span className="section-label">Communication Focus</span>
-            <h2>How results are communicated</h2>
+            <span className="section-label">Outputs</span>
+            <h2>What the platform delivers</h2>
           </div>
           <div className="insights-list">
-            <p>A documented workflow from field capture to verified reporting.</p>
-            <p>Locality summaries that translate readings into decision-ready evidence.</p>
-            <p>Map views that support comparative review across time and location.</p>
+            <p>A structured workflow from field capture to reporting.</p>
+            <p>Locality summaries that support review, complaints, and planning.</p>
+            <p>Map views for comparing conditions across time and place.</p>
           </div>
         </section>
 
