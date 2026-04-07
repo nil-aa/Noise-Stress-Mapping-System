@@ -36,10 +36,24 @@ async function fetchWithAuth(url, options = {}, retry = true) {
   return response;
 }
 
-export async function submitReading({ latitude, longitude, stress_score }) {
+export async function submitReading({
+  latitude,
+  longitude,
+  stress_score,
+  incident_type,
+  notes,
+  audio_duration_sec,
+}) {
   const res = await fetchWithAuth(`${BASE_URL}/submit-reading`, {
     method: "POST",
-    body: JSON.stringify({ latitude, longitude, stress_score }),
+    body: JSON.stringify({
+      latitude,
+      longitude,
+      stress_score,
+      incident_type,
+      notes,
+      audio_duration_sec,
+    }),
   });
 
   if (!res.ok) throw new Error(await res.text());
@@ -65,6 +79,19 @@ export async function getNearbyReadings(lat, lng, radius = 500) {
   const res = await fetchWithAuth(
     `${BASE_URL}/nearby-readings?lat=${lat}&lng=${lng}&radius=${radius}`
   );
+
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+export async function getCommunityReadings(excludeUserIds = []) {
+  const params = new URLSearchParams();
+  if (excludeUserIds.length > 0) {
+    params.set("exclude_user_ids", excludeUserIds.join(","));
+  }
+
+  const suffix = params.toString() ? `?${params.toString()}` : "";
+  const res = await fetchWithAuth(`${BASE_URL}/community-readings${suffix}`);
 
   if (!res.ok) throw new Error(await res.text());
   return res.json();

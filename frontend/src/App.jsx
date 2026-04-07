@@ -4,8 +4,8 @@ import Map from "./components/Map";
 import NoiseCheckInModal from "./components/NoiseCheckInModal";
 import {
   getHeatmapData,
+  getCommunityReadings,
   getMyReadings,
-  getNearbyReadings,
   getPredictedStress,
   generateLocalityReport,
   submitReading,
@@ -38,7 +38,7 @@ function App() {
   const [statusMessage, setStatusMessage] = useState("Finding your live monitoring zone...");
 
   const [myReadings, setMyReadings] = useState([]);
-  const [nearbyReadings, setNearbyReadings] = useState([]);
+  const [communityReadings, setCommunityReadings] = useState([]);
   const [heatPoints, setHeatPoints] = useState([]);
   const [selectedLocality, setSelectedLocality] = useState(chennaiLocalities[0].name);
   const [targetDateTime, setTargetDateTime] = useState(getDefaultDateTimeValue);
@@ -54,14 +54,14 @@ function App() {
     setHeatPoints(data);
   };
 
-  const loadUserData = async (lat, lng) => {
-    const [myData, nearbyData] = await Promise.all([
+  const loadUserData = async () => {
+    const [myData, communityData] = await Promise.all([
       getMyReadings(),
-      getNearbyReadings(lat, lng, 500),
+      getCommunityReadings([3]),
     ]);
 
     setMyReadings(myData);
-    setNearbyReadings(nearbyData);
+    setCommunityReadings(communityData);
   };
 
   useEffect(() => {
@@ -71,7 +71,7 @@ function App() {
       setStatusMessage("Using Chennai as the fallback monitoring region.");
       setIsLoadingLocation(false);
       refreshHeatmap();
-      loadUserData(fallback.lat, fallback.lng).catch((error) => {
+      loadUserData().catch((error) => {
         console.error("Failed loading readings:", error);
       });
       return;
@@ -87,7 +87,7 @@ function App() {
         setIsLoadingLocation(false);
 
         refreshHeatmap();
-        loadUserData(lat, lng).catch((error) => {
+        loadUserData().catch((error) => {
           console.error("Failed loading readings:", error);
         });
       },
@@ -100,7 +100,7 @@ function App() {
         setIsLoadingLocation(false);
 
         refreshHeatmap();
-        loadUserData(fallback.lat, fallback.lng).catch((requestError) => {
+        loadUserData().catch((requestError) => {
           console.error("Failed loading fallback readings:", requestError);
         });
       },
@@ -124,7 +124,7 @@ function App() {
           notes: reading.notes,
           audioUrl: reading.audio_url,
         })),
-        ...nearbyReadings
+        ...communityReadings
           .filter((reading) => !myReadings.some((mine) => mine.id === reading.id))
           .map((reading) => ({
             lat: reading.latitude,
@@ -155,7 +155,7 @@ function App() {
         },
       ];
     },
-    [myReadings, nearbyReadings, predictionResult]
+    [myReadings, communityReadings, predictionResult]
   );
 
   const stats = useMemo(() => {
@@ -171,12 +171,12 @@ function App() {
 
     return {
       myReports: myReadings.length,
-      nearbyReports: nearbyReadings.length,
+      nearbyReports: communityReadings.length,
       heatZones: heatPoints.length,
       highestStress,
       averageStress,
     };
-  }, [heatPoints.length, myReadings, nearbyReadings.length]);
+  }, [communityReadings.length, heatPoints.length, myReadings]);
 
   const handleNoiseDetected = (payload) => {
     navigator.geolocation.getCurrentPosition(
@@ -200,19 +200,27 @@ function App() {
           });
 
           if (payload.audioBlob && readingResponse?.reading_id) {
-            await uploadReadingAudio({
-              readingId: readingResponse.reading_id,
-              audioBlob: payload.audioBlob,
-              filename: payload.audioFilename || "recording.webm",
-            });
+            try {
+              await uploadReadingAudio({
+                readingId: readingResponse.reading_id,
+                audioBlob: payload.audioBlob,
+                filename: payload.audioFilename || "recording.webm",
+              });
+            } catch (audioError) {
+              console.error("Reading saved but audio upload failed:", audioError);
+              setStatusMessage("Reading saved, but the audio proof could not be uploaded.");
+            }
           }
 
           await refreshHeatmap();
-          await loadUserData(lat, lng);
+          await loadUserData();
+          if (!payload.audioBlob) {
+            setStatusMessage("New reading captured and saved to the database.");
+          }
           setIsCheckInOpen(false);
         } catch (error) {
           console.error(error);
-          alert("Failed to store in backend.");
+          alert("Failed to save the reading to the database.");
         }
       },
       (error) => {

@@ -513,6 +513,30 @@ def get_nearby_readings(
     return result
 
 
+@app.get("/community-readings")
+def get_community_readings(
+    request: Request,
+    exclude_user_ids: str = "",
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    excluded_ids = {
+        int(value)
+        for value in exclude_user_ids.split(",")
+        if value.strip().isdigit()
+    }
+    excluded_ids.add(current_user.id)
+
+    readings = (
+        db.query(NoiseReading)
+        .filter(~NoiseReading.user_id.in_(excluded_ids))
+        .order_by(NoiseReading.timestamp.desc())
+        .all()
+    )
+
+    return [serialize_reading(reading, request) for reading in readings]
+
+
 @app.get("/predict-stress")
 def predict_stress(
     lat: float,
