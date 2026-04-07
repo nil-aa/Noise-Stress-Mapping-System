@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import App from "./App";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Evidence from "./pages/Evidence";
 import Insights from "./pages/Insights";
 import Landing from "./pages/Landing";
 import Laws from "./pages/Laws";
@@ -22,6 +23,14 @@ createRoot(document.getElementById("root")).render(
           element={
             <ProtectedRoute>
               <App />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/evidence"
+          element={
+            <ProtectedRoute>
+              <Evidence />
             </ProtectedRoute>
           }
         />

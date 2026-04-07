@@ -10,6 +10,7 @@ const publicLinks = [
 
 const privateLinks = [
   { to: "/dashboard", label: "Dashboard" },
+  { to: "/evidence", label: "Evidence" },
   { to: "/insights", label: "Insights" },
   { to: "/laws", label: "Laws & Rights" },
 ];
