@@ -6,17 +6,17 @@ const legalCards = [
   {
     title: "Core Rule",
     detail:
-      "Noise Pollution (Regulation and Control) Rules, 2000 is the main central framework used in India for ambient-noise zoning, loudspeaker limits, and silence-zone protections.",
+      "The Noise Pollution (Regulation and Control) Rules, 2000 provide the national framework for ambient-noise limits, zoning categories, and loudspeaker restrictions.",
   },
   {
     title: "Where It Applies",
     detail:
-      "Tamil Nadu and Chennai follow the central framework together with enforcement by the Tamil Nadu Pollution Control Board, local police, and district administration.",
+      "In Tamil Nadu, the central framework is enforced through the Tamil Nadu Pollution Control Board, district administration, and local police under applicable notifications.",
   },
   {
     title: "Why It Matters",
     detail:
-      "Repeated night construction, loud parties, industrial noise, and loudspeakers can all become complaint-ready evidence issues when they breach time or ambient limits.",
+      "Consistent documentation of night-time construction, events, or amplified sound helps establish patterns against time and zone limits.",
   },
 ];
 
@@ -63,9 +63,9 @@ function Laws() {
           <span className="section-label">Laws & Rights</span>
           <h1>Noise-law guidance for Chennai and Tamil Nadu users.</h1>
           <p>
-            This page is a practical reading companion, not personal legal advice. The summaries
-            below are based on official or primary public sources checked on April 2, 2026, and are
-            meant to help users understand what kind of disturbance patterns are worth documenting.
+            This page is a practical overview and not personal legal advice. The summaries below
+            are based on official or primary public sources reviewed on April 2, 2026, and are
+            intended to guide what to document and where to escalate a complaint.
           </p>
         </section>
 
@@ -83,8 +83,8 @@ function Laws() {
             <span className="section-label">Ambient Limits</span>
             <h2>Common ambient noise limits used in India</h2>
             <p>
-              CPCB publishes the standard day and night limits for different land-use categories.
-              Day is generally 6:00 AM to 10:00 PM and night is 10:00 PM to 6:00 AM.
+              CPCB publishes day and night limits by land-use category. Day is generally 6:00 AM to
+              10:00 PM and night is 10:00 PM to 6:00 AM, subject to local notifications.
             </p>
           </div>
 
@@ -113,14 +113,14 @@ function Laws() {
         <section className="laws-panel">
           <div className="laws-panel-copy">
             <span className="section-label">Practical Rules</span>
-            <h2>What users usually care about most</h2>
+            <h2>Key practical points</h2>
           </div>
 
           <div className="laws-list">
-            <p>Loudspeakers and public-address systems are generally restricted at night, especially between 10:00 PM and 6:00 AM, unless a lawful exception applies.</p>
-            <p>Silence zones around places such as hospitals and educational institutions carry stricter limits.</p>
-            <p>Recurring construction, event, traffic, or party noise becomes much stronger evidence when users can show timing, repetition, and night-time impact.</p>
-            <p>Police and pollution-control enforcement can both become relevant depending on urgency and the nature of the disturbance.</p>
+            <p>Loudspeakers and public-address systems are generally restricted at night, unless a lawful exception applies.</p>
+            <p>Silence zones around hospitals and educational institutions carry stricter limits.</p>
+            <p>Recurring construction, event, traffic, or party noise is stronger evidence when timing, repetition, and night-time impact are documented.</p>
+            <p>Police or pollution-control authorities may be relevant depending on urgency and the nature of the disturbance.</p>
           </div>
         </section>
 
@@ -143,7 +143,7 @@ function Laws() {
         <section className="laws-panel">
           <div className="laws-panel-copy">
             <span className="section-label">Official Sources</span>
-            <h2>Primary links</h2>
+            <h2>Primary sources</h2>
           </div>
 
           <div className="source-list">

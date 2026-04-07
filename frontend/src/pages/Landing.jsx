@@ -5,19 +5,19 @@ import "./Landing.css";
 
 const features = [
   {
-    title: "Live geospatial dashboard",
+    title: "Integrated geospatial dashboard",
     description:
-      "Watch your map refresh with personal readings, nearby reports, and heatmap overlays in one presentation-ready screen.",
+      "View personal readings, nearby activity, and heatmap layers in a single, decision-ready map.",
   },
   {
-    title: "Field-friendly check-ins",
+    title: "Structured field check-ins",
     description:
-      "Capture short microphone samples, estimate stress intensity, and save observations directly back to the mapping backend.",
+      "Record short audio samples, rate stress intensity, and store observations with time and location.",
   },
   {
-    title: "Clear communication layer",
+    title: "Actionable locality reporting",
     description:
-      "Landing, insights, and dashboard pages now give the project a stronger story for demos, viva reviews, and faculty evaluation.",
+      "Generate locality summaries with evidence, trends, and recommendations to support formal complaints or planning.",
   },
 ];
 
@@ -31,19 +31,19 @@ function Landing() {
       <main className="landing-main">
         <section className="landing-hero">
           <div className="landing-copy">
-            <span className="section-label">Urban Sound Analytics</span>
-            <h1>Noise stress mapping for smarter environmental storytelling.</h1>
+            <span className="section-label">Environmental Noise Monitoring</span>
+            <h1>Visualizing Noise to Improve Urban Living</h1>
             <p>
-              Present a system that feels complete: a polished landing page, animated interface,
-              protected live dashboard, and insight-driven design built around real spatial data.
+              Collect geotagged noise readings, analyze stress trends, and deliver localized insights
+              for communities, researchers, and public authorities.
             </p>
 
             <div className="landing-actions">
               <Link className="landing-primary" to={hasToken ? "/dashboard" : "/register"}>
-                {hasToken ? "Open Dashboard" : "Launch Project"}
+                {hasToken ? "Open Dashboard" : "Create Account"}
               </Link>
               <Link className="landing-secondary" to="/insights">
-                Explore Insights
+                View Insights
               </Link>
             </div>
 
