@@ -1,1 +1,0 @@
-# Noise-Stress-Mapping-System
