@@ -29,8 +29,8 @@
 
 .landing-copy h1 {
   margin: 14px 0 18px;
-  max-width: 11ch;
-  font-size: clamp(3.2rem, 6vw, 5.6rem);
+  max-width: 12.65ch;
+  font-size: calc(clamp(3.2rem, 6vw, 5.6rem) - 2px);
   line-height: 0.9;
   letter-spacing: -0.06em;
   color: #1d1816;

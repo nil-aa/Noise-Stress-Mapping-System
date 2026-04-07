@@ -6,15 +6,15 @@ import "./Insights.css";
 const sections = [
   {
     title: "Capture",
-    text: "The check-in flow records a short microphone sample and extracts RMS and peak values to estimate acoustic intensity.",
+    text: "Collect short, geotagged audio samples and user observations to document noise events.",
   },
   {
     title: "Transform",
-    text: "Readings are normalized into a stress score so the backend can aggregate multiple reports into an interpretable surface.",
+    text: "Normalize readings into a stress score to enable consistent aggregation across locations and time.",
   },
   {
     title: "Communicate",
-    text: "Markers, heatmaps, and supporting UI panels make the system easier to present to faculty, teammates, and reviewers.",
+    text: "Visualize trends through heatmaps, markers, and locality summaries for clear stakeholder briefing.",
   },
 ];
 
@@ -27,11 +27,11 @@ function Insights() {
 
       <main className="insights-main">
         <section className="insights-hero">
-          <span className="section-label">System Narrative</span>
-          <h1>From raw sound samples to readable environmental stress maps.</h1>
+          <span className="section-label">System Overview</span>
+          <h1>From sound samples to actionable noise insights.</h1>
           <p>
-            This page gives your professor a cleaner explanation of what the system does, why the
-            map matters, and how each interface layer supports the project story.
+            Review how field recordings are converted into stress scores, mapped geographically,
+            and summarized for formal reporting.
           </p>
         </section>
 
@@ -46,13 +46,13 @@ function Insights() {
 
         <section className="insights-band">
           <div>
-            <span className="section-label">Design Upgrade</span>
-            <h2>Why the interface now feels more complete</h2>
+            <span className="section-label">Communication Focus</span>
+            <h2>How results are communicated</h2>
           </div>
           <div className="insights-list">
-            <p>Landing, dashboard, and insights screens create a stronger project structure.</p>
-            <p>Animated cards and gradients add motion without making the app feel noisy.</p>
-            <p>Leaflet marker sizing now stays stable when users zoom out and back in.</p>
+            <p>A documented workflow from field capture to verified reporting.</p>
+            <p>Locality summaries that translate readings into decision-ready evidence.</p>
+            <p>Map views that support comparative review across time and location.</p>
           </div>
         </section>
 
