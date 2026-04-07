@@ -29,11 +29,10 @@ function Login() {
       <Navbar />
       <main className="auth-main">
         <section className="auth-panel auth-panel-info">
-          <span className="section-label">Welcome Back</span>
-          <h1>Return to the live monitoring dashboard.</h1>
+          <span className="section-label">Secure Access</span>
+          <h1>Access the monitoring dashboard.</h1>
           <p>
-            Sign in to review personal readings, shared neighborhood reports, and the refreshed
-            stress map interface.
+            Sign in to review your readings, nearby reports, and current stress maps.
           </p>
         </section>
 
@@ -41,7 +40,7 @@ function Login() {
           <form className="auth-form" onSubmit={handleSubmit}>
             <div>
               <span className="section-label">Sign In</span>
-              <h2>Access your workspace</h2>
+              <h2>Access your account</h2>
             </div>
 
             <label className="auth-field">
@@ -71,7 +70,7 @@ function Login() {
             </button>
 
             <p className="auth-switch">
-              Need an account? <Link to="/register">Create one here</Link>
+              Need an account? <Link to="/register">Create one</Link>
             </p>
           </form>
         </section>

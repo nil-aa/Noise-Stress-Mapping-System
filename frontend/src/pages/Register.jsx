@@ -24,13 +24,12 @@ function Register() {
   return (
     <div className="auth-page">
       <Navbar />
-      <main className="auth-main">
+      <main className="auth-main auth-main-register">
         <section className="auth-panel auth-panel-info">
-          <span className="section-label">Create Access</span>
-          <h1>Start using the project with a cleaner, more complete interface.</h1>
+          <span className="section-label">Account Setup</span>
+          <h1 className="auth-headline-wide">Create an account to submit and track noise readings.</h1>
           <p>
-            Register to unlock the dashboard, save readings to the map, and present the system with
-            a more polished multi-page experience.
+            Registration enables dashboard access, saved submissions, and formal reporting views.
           </p>
         </section>
 
@@ -38,7 +37,7 @@ function Register() {
           <form className="auth-form" onSubmit={handleSubmit}>
             <div>
               <span className="section-label">Register</span>
-              <h2>Set up your account</h2>
+              <h2>Create your account</h2>
             </div>
 
             <label className="auth-field">
@@ -69,7 +68,7 @@ function Register() {
             </button>
 
             <p className="auth-switch">
-              Already registered? <Link to="/login">Sign in instead</Link>
+              Already registered? <Link to="/login">Sign in</Link>
             </p>
           </form>
         </section>
